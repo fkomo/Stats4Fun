@@ -1,9 +1,9 @@
-import { Match } from './match';
-import { Player } from './player';
-import { PlayerStats } from './playerStats';
-import { PlayerMatchStats } from './playerMatchStats';
-import { Enum } from './enum';
-import { TeamStats } from './teamStats';
+import { Match } from '../models/match';
+import { Player } from '../models/player';
+import { PlayerStats } from '../models/playerStats';
+import { PlayerMatchStats } from '../models/playerMatchStats';
+import { Enum } from '../models/enum';
+import { TeamStats } from '../models/teamStats';
 
 export const TEAMS: Enum[] = [
 	{ id: 1, name: 'Inter Kokotovo' },

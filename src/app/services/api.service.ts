@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Match } from './match';
+import { Match } from '../models/match';
 import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, COMPETITIONS, PLACES, MATCH_TYPES, TEAMS, SEASONS, MATCH_RESULTS, PLAYER_POSITIONS, TEAM_STATS } from './mock-data';
-import { Player } from './player';
-import { Enum } from './enum';
+import { Player } from '../models/player';
+import { Enum } from '../models/enum';
 import { LogService } from './log.service';
-import { PlayerStats } from './playerStats';
-import { TeamStats } from './teamStats';
+import { PlayerStats } from '../models/playerStats';
+import { TeamStats } from '../models/teamStats';
 import { Observable, of } from 'rxjs';
-import { PlayerMatchStats } from './playerMatchStats';
+import { PlayerMatchStats } from '../models/playerMatchStats';
 
 @Injectable({
 	providedIn: 'root'

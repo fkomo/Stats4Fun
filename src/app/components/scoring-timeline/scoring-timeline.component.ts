@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
-import { Match } from '../match';
+import { Match } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
-import { ApiService } from '../api.service';
-import { PlayerMatchStats } from '../playerMatchStats';
+import { ApiService } from '../../services/api.service';
+import { PlayerMatchStats } from '../../models/playerMatchStats';
 
 @Component({
 	selector: 'app-scoring-timeline',

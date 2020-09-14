@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Enum } from '../enum';
-import { ApiService } from '../api.service';
-import { Player } from '../player';
+import { Enum } from '../../models/enum';
+import { ApiService } from '../../services/api.service';
+import { Player } from '../../models/player';
 import { Validators } from '@angular/forms';
 
 @Component({

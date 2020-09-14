@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PlayersComponent } from './players/players.component';
-import { PlayerComponent } from './player/player.component';
-import { MatchesComponent } from './matches/matches.component';
-import { MatchComponent } from './match/match.component';
-import { EnumComponent } from './enum/enum.component';
-import { EnumsComponent } from './enums/enums.component';
+import { PlayersComponent } from './components/players/players.component';
+import { PlayerComponent } from './components/player/player.component';
+import { MatchesComponent } from './components/matches/matches.component';
+import { MatchComponent } from './components/match/match.component';
+import { EnumComponent } from './components/enum/enum.component';
+import { EnumsComponent } from './components/enums/enums.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/players', pathMatch: 'full' },

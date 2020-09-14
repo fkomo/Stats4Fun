@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Validators } from '@angular/forms';
-import { Match } from '../match';
-import { ApiService } from '../api.service';
+import { Match } from '../../models/match';
+import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayerMatchStats } from '../playerMatchStats';
-import { TeamStats } from '../teamStats';
+import { PlayerMatchStats } from '../../models/playerMatchStats';
+import { TeamStats } from '../../models/teamStats';
 import { BaseComponent } from '../base/base.component';
-import { PlayerStats } from '../playerStats';
+import { PlayerStats } from '../../models/playerStats';
 
 @Component({
 	selector: 'app-match',

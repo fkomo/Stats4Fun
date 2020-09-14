@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Match } from '../match';
-import { ApiService } from '../api.service';
+import { Match } from '../../models/match';
+import { ApiService } from '../../services/api.service';
 import { BaseComponent } from '../base/base.component';
-import { TeamStats } from '../teamStats';
+import { TeamStats } from '../../models/teamStats';
 
 @Component({
 	selector: 'app-match-list',

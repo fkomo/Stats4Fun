@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Enum } from '../enum';
-import { ApiService } from '../api.service';
+import { Enum } from '../../models/enum';
+import { ApiService } from '../../services/api.service';
 
 @Component({
 	selector: 'app-enum',
