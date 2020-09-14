@@ -2,47 +2,7 @@ import { Match } from '../models/match';
 import { Player } from '../models/player';
 import { PlayerStats } from '../models/playerStats';
 import { PlayerMatchStats } from '../models/playerMatchStats';
-import { Enum } from '../models/enum';
 import { TeamStats } from '../models/teamStats';
-
-export const TEAMS: Enum[] = [
-	{ id: 1, name: 'Inter Kokotovo' },
-	{ id: 2, name: '1.FC Ujeby' },
-	{ id: 3, name: 'SK. Slooovan' },
-];
-
-export const PLACES: Enum[] = [
-	{ id: 1, name: 'mladost' },
-	{ id: 2, name: 'ftvs' },
-];
-
-export const COMPETITIONS: Enum[] = [
-	{ id: 1, name: '1.liga' },
-	{ id: 2, name: '2.liga' },
-];
-
-export const MATCH_TYPES: Enum[] = [
-	{ id: 1, name: 'liga' },
-	{ id: 2, name: 'trening' },
-];
-
-export const MATCH_RESULTS: Enum[] = [
-	{ id: 1, name: 'win' },
-	{ id: 2, name: 'loss' },
-	{ id: 3, name: 'tie' },
-];
-
-export const PLAYER_POSITIONS: Enum[] = [
-	{ id: 1, name: 'utocnik' },
-	{ id: 2, name: 'obranca' },
-	{ id: 3, name: 'brankar' },
-];
-
-export const SEASONS: Enum[] = [
-	{ id: 1, name: '2009/2010' },
-	{ id: 2, name: '2010/2011' },
-	{ id: 3, name: '2011/2012' },
-];
 
 export const PLAYERS: Player[] = [
 	{ id: 1, name: 'Filip Komorovský', dateOfBirth: new Date("1985-06-19"), number: 13, teamId: 1, playerPositionId: 1, retired: false },

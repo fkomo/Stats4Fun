@@ -14,6 +14,7 @@ export class EnumComponent implements OnInit {
 
 	@Input() enumName: string;
 	@Input() addNotAllowed: boolean;
+	@Input() modifyNotAllowed: boolean;
 
 	constructor(private apiService: ApiService) {
 	}
@@ -40,6 +41,9 @@ export class EnumComponent implements OnInit {
 	}
 
 	renameItem(id: number): void {
+
+		if (this.modifyNotAllowed)
+			return;
 
 		var item = this.items.find(i => i.id == id);
 		var newName = prompt('Rename ' + item.name + ' to:', item.name);

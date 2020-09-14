@@ -2,7 +2,7 @@
 
 	<h2>{{ this.enumName }}</h2>
 	<ul>
-		<li class="clickable" value="{{ item.id }}" *ngFor="let item of items" (click)="renameItem(item.id);">
+		<li [class.clickable]="!modifyNotAllowed" value="{{ item.id }}" *ngFor="let item of items" (click)="renameItem(item.id);">
 			{{ item.name }}
 		</li>
 		<li *ngIf="!addNotAllowed" class="clickable" (click)="addItem();">+</li>

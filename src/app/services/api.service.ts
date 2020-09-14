@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Match } from '../models/match';
 import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, COMPETITIONS, PLACES, MATCH_TYPES, TEAMS, SEASONS, MATCH_RESULTS, PLAYER_POSITIONS, TEAM_STATS } from './mock-data';
 import { Player } from '../models/player';
-import { Enum } from '../models/enum';
+import { Enum, EnumAdapter } from '../models/enum';
 import { LogService } from './log.service';
 import { PlayerStats } from '../models/playerStats';
 import { TeamStats } from '../models/teamStats';
 import { Observable, of } from 'rxjs';
 import { PlayerMatchStats } from '../models/playerMatchStats';
+import { map } from "rxjs/operators";
 
 @Injectable({
 	providedIn: 'root'
@@ -16,10 +17,13 @@ import { PlayerMatchStats } from '../models/playerMatchStats';
 
 export class ApiService {
 
+	private baseUrl = "http://localhost:8042/api";
+
 	constructor(
 		private log: LogService,
-		private http: HttpClient) { 
-		}
+		private http: HttpClient,
+		private adapter: EnumAdapter) {
+	}
 
 	enumByName(enumName: string): Observable<Enum[]> {
 		this.log.add(`enumByName(${enumName})`);
@@ -52,43 +56,57 @@ export class ApiService {
 	enumCompetitions(): Observable<Enum[]> {
 		this.log.add(`enumCompetitions`);
 
-		return of(COMPETITIONS);
+		return this.http.get(`${ this.baseUrl }/enums/competitions`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
-	enumTeams(): Observable<Enum[]> {
+	enumTeams(): Observable<any> {
 		this.log.add(`enumTeams`);
 
-		return of(TEAMS);
+		return this.http.get(`${ this.baseUrl }/enums/teams`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumPlaces(): Observable<Enum[]> {
 		this.log.add(`enumPlaces`);
 
-		return of(PLACES);
+		return this.http.get(`${ this.baseUrl }/enums/places`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumMatchTypes(): Observable<Enum[]> {
 		this.log.add(`enumMatchTypes`);
 
-		return of(MATCH_TYPES);
+		return this.http.get(`${ this.baseUrl }/enums/matchTypes`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumSeasons(): Observable<Enum[]> {
 		this.log.add(`enumSeasons`);
 
-		return of(SEASONS);
+		return this.http.get(`${ this.baseUrl }/enums/seasons`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumMatchResults(): Observable<Enum[]> {
 		this.log.add(`enumMatchResults`);
 
-		return of(MATCH_RESULTS);
+		return this.http.get(`${ this.baseUrl }/enums/matchResults`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumPlayerPositions(): Observable<Enum[]> {
 		this.log.add(`enumPlayerPositions`);
 
-		return of(PLAYER_POSITIONS);
+		return this.http.get(`${ this.baseUrl }/enums/playerPositions`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	saveEnum(enumName: string, item: Enum): Enum {
@@ -103,10 +121,10 @@ export class ApiService {
 		return true;
 	}
 
-	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number, 
+	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
 		competitionId: number): Observable<TeamStats> {
 		this.log.add(`getTeamStats(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
- 
+
 		return of(TEAM_STATS[1]);
 	}
 
@@ -122,7 +140,7 @@ export class ApiService {
 		return of(MATCHES);
 	}
 
-	listMatches(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number, 
+	listMatches(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
 		competitionId: number): Observable<Match[]> {
 		this.log.add(`listMatches(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
 
@@ -148,7 +166,7 @@ export class ApiService {
 	}
 
 	listPlayerStats(
-		seasonId: number, matchTypeId: number, competitionId: number, teamId: number, 
+		seasonId: number, matchTypeId: number, competitionId: number, teamId: number,
 		playerPositionId: number): Observable<PlayerStats[]> {
 		this.log.add(`listPlayerStats(${seasonId}, ${matchTypeId}, ${competitionId}, ${teamId}, ${playerPositionId})`);
 
