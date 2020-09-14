@@ -1,0 +1,36 @@
+#content {
+  width: 720px;
+  overflow-x: auto;
+  margin: auto;
+}
+
+input,
+select {
+  display: block;
+  padding-left: 8px;
+  border: 0;
+  color: var(--secondary-font-color);
+  background-color: var(--element-bg-color);
+  height: 30px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  display: table-cell;
+  height: 32px;
+  line-height: 32px;
+  padding-right: 16px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.invalid {
+  border-left: 4px solid red;
+}
+
+.winner {
+	color: var(--hilighted-font-color);
+}

@@ -1,0 +1,11 @@
+<section id="enum-content">
+
+	<h2>{{ this.enumName }}</h2>
+	<ul>
+		<li class="clickable" value="{{ item.id }}" *ngFor="let item of items" (click)="renameItem(item.id);">
+			{{ item.name }}
+		</li>
+		<li *ngIf="!addNotAllowed" class="clickable" (click)="addItem();">+</li>
+	</ul>
+
+</section>

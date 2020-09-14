@@ -1,0 +1,22 @@
+<div id="menu-bar">
+	<div>
+		<a class="color1" routerLink="/players" (click)="tabChanged('players')"
+			[class.selected]="currentTab === 'players'">Players</a>
+	</div>
+	<div>
+		<a class="color2" routerLink="/matches" (click)="tabChanged('matches')"
+			[class.selected]="currentTab === 'matches'">Matches</a>
+	</div>
+	<div>
+		<a class="color3" routerLink="/match" (click)="tabChanged('new-match')"
+			[class.selected]="currentTab === 'new-match'">New Match</a>
+	</div>
+	<div>
+		<a class="color4" routerLink="/player" (click)="tabChanged('new-player')"
+			[class.selected]="currentTab === 'new-player'">New Player</a>
+	</div>
+	<div>
+		<a class="color5" routerLink="/enums" (click)="tabChanged('enums')"
+			[class.selected]="currentTab === 'enums'">Enums</a>
+	</div>
+</div>

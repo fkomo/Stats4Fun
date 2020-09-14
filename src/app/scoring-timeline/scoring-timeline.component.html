@@ -1,0 +1,8 @@
+<div style="overflow-x: auto;">
+	<div style="height: 256px;"
+		[ngStyle]="{'width.px': (matches.length > 50 ? matches.length * 10 : 720) }">
+		<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+			[legend]="barChartLegend" [chartType]="barChartType">
+		</canvas>
+	</div>
+</div>

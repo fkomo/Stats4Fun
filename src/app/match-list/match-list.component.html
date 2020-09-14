@@ -1,0 +1,57 @@
+<div *ngIf="teamStats != null && teamStats.team2Id != 0">
+	<h2 *ngIf="teamStats != null && teamStats.team2Id != 0">All Mutual Matches</h2>
+	<div class="row">
+		<div class="right score-cell" [ngStyle]="{'width.%':(50 - goalsForPercentage) | number : '1.2-2' }">
+			{{ teamStats.goalsFor }} goals
+		</div>
+		<div class="score-cell" [ngStyle]="{'width.%':goalsForPercentage | number : '1.2-2' }">
+			<div class="score right color8">&#160;</div>
+		</div>
+		<div class="center score-cell">:</div>
+		<div class="score-cell" [ngStyle]="{'width.%':goalsAgainstPercentage | number : '1.2-2' }">
+			<div class="score left color9">&#160;</div>
+		</div>
+		<div class="left score-cell" [ngStyle]="{'width.%':(50 - goalsAgainstPercentage) | number : '1.2-2' }">
+			{{ teamStats.goalsAgainst }} goals
+		</div>
+	</div>
+</div>
+
+<div *ngIf="matches != null && matches.length > 1">
+	<div class="timeline-row" [ngClass]="{
+			'tl-normal' : matches.length < 21, 
+			'tl-tight' : matches.length > 20, 
+			'hide-text': matches.length > 20 }">
+		<div *ngFor="let match of matches">
+			<a href="/match/{{ match.id }}"
+				class="{{ getMatchColor(match) }}">{{ match.homeTeamScore }}:{{ match.awayTeamScore }}</a>
+		</div>
+	</div>
+</div>
+
+<div class="content">
+	<div class="matches-header">
+		<div class="left" (click)="sort('dateTime')">Date time</div>
+		<div class="left not-important" (click)="sort('place')">Place</div>
+		<div class="left not-important" (click)="sort('matchType')">Match type</div>
+		<div class="left not-important" (click)="sort('competition')">Competition</div>
+		<div class="right" (click)="sort('homeTeam')">Home team</div>
+		<div (click)="sort('homeTeamScore')">&#160;</div>
+		<div>&#160;</div>
+		<div (click)="sort('awayTeamScore')">&#160;</div>
+		<div class="left" (click)="sort('awayTeam')">Away team</div>
+	</div>
+	<a class="matches-row" *ngFor="let match of matches" href="/match/{{ match.id }}">
+		<div class="left">{{ match.dateTime | date:'dd. M. yyyy H:mm' }}</div>
+		<div class="left not-important">{{ getEnum('places', match.placeId).name }}</div>
+		<div class="left not-important">{{ getEnum('matchTypes', match.matchTypeId).name }}</div>
+		<div class="left not-important">{{ getEnum('competitions', match.competitionId).name }}</div>
+		<div class="right" [class.winner]="match.homeTeamScore > match.awayTeamScore">
+			{{ getEnum('teams', match.homeTeamId).name }}</div>
+		<div>{{match.homeTeamScore}}</div>
+		<div>:</div>
+		<div>{{match.awayTeamScore}}</div>
+		<div class="left" [class.winner]="match.homeTeamScore < match.awayTeamScore">
+			{{ getEnum('teams', match.awayTeamId).name }}</div>
+	</a>
+</div>

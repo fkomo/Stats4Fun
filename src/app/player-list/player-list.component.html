@@ -1,0 +1,36 @@
+<div id="content">
+	<div class="players-header">
+		<div [class.hilighted]="selectedColumn=='number'" class="not-important" (click)="sort('number')">#</div>
+		<div [class.hilighted]="selectedColumn=='name'" class="left" (click)="sort('name')">Name</div>
+		<div [class.hilighted]="selectedColumn=='playerPosition'" class="left not-important"
+			(click)="sort('playerPosition')">Post</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='gamesPlayed'" (click)="sort('gamesPlayed')">GP</div>
+		<div [class.hilighted]="selectedColumn=='goals'" (click)="sort('goals')">G</div>
+		<div [class.hilighted]="selectedColumn=='assists'" (click)="sort('assists')">A</div>
+		<div [class.hilighted]="selectedColumn=='points'" (click)="sort('points')">P</div>
+		<div [class.hilighted]="selectedColumn=='posNegPoints'" (click)="sort('posNegPoints')">+/-</div>
+		<div [class.hilighted]="selectedColumn=='yellowCards'" (click)="sort('yellowCards')">YC</div>
+		<div [class.hilighted]="selectedColumn=='redCards'" (click)="sort('redCards')">RC</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='wins'" (click)="sort('wins')">W</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='losses'" (click)="sort('losses')">L</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='ties'" (click)="sort('ties')">T</div>
+	</div>
+	<a class="players-row" [class.retired]="player.retired === true" 
+		*ngFor="let player of players" href="/player/{{ player.id }}">
+		<!-- <xsl:otherwise>&#160;</xsl:otherwise> -->
+		<div [class.hilighted]="selectedColumn=='number'" class="not-important">{{ player.number }}</div>
+		<div [class.hilighted]="selectedColumn=='name'" class="left">{{ player.name }}</div>
+		<div [class.hilighted]="selectedColumn=='playerPosition'" class="left not-important">
+			{{ getEnum('playerPositions', player.playerPositionId).name }}</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='gamesPlayed'">{{ player.gamesPlayed }}</div>
+		<div [class.hilighted]="selectedColumn=='goals'">{{ player.goals }}</div>
+		<div [class.hilighted]="selectedColumn=='assists'">{{ player.assists }}</div>
+		<div [class.hilighted]="selectedColumn=='points'">{{ player.points }}</div>
+		<div [class.hilighted]="selectedColumn=='posNegPoints'">{{ player.posNegPoints }}</div>
+		<div [class.hilighted]="selectedColumn=='yellowCards'">{{ player.yellowCards }}</div>
+		<div [class.hilighted]="selectedColumn=='redCards'">{{ player.redCards }}</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='wins'">{{ player.wins }}</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='losses'">{{ player.losses }}</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='ties'">{{ player.ties }}</div>
+	</a>
+</div>

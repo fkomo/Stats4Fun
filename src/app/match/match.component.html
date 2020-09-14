@@ -1,0 +1,136 @@
+<form id="content" [formGroup]="matchForm" (ngSubmit)="saveMatch()">
+
+	<section>
+		<div class="button" type="submit" [class.hidden]="!editable || !matchForm.valid" (click)="saveMatch()">Save</div>
+		<div class="button" [class.hidden]="!editable" (click)="addPlayer()">Add Player</div>
+		<div class="button" [class.hidden]="editable" (click)="editMatch()">Edit</div>
+		<div class="button" [class.hidden]="!editable || id == 0" (click)="deleteMatch()">Delete</div>
+		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
+	</section>
+
+	<h1 *ngIf="!editable">
+		<div class="detail-header">
+			<div class="right" [ngStyle]="{'width.%':50 }" 
+				[class.winner]="matchForm.get('homeTeamScore').value > matchForm.get('awayTeamScore').value">
+				{{ getEnum('teams', matchForm.get('homeTeamId').value).name }}
+				({{ matchForm.get('homeTeamScore').value }})
+			</div>
+			<div class="center">:</div>
+			<div class="left" [ngStyle]="{'width.%':50 }"
+				[class.winner]="matchForm.get('homeTeamScore').value < matchForm.get('awayTeamScore').value">
+				({{ matchForm.get('awayTeamScore').value }})
+				{{ getEnum('teams', matchForm.get('awayTeamId').value).name }}
+			</div>
+		</div>
+		<div class="detail-tags">
+			<div>{{ matchForm.get('dateTime').value | date: 'dd. MM. yyyy HH:mm, EEEE' }}</div>
+			<div>{{ getEnum('competitions', matchForm.get('competitionId').value).name }}</div>
+			<div>{{ getEnum('places', matchForm.get('placeId').value).name }}</div>
+		</div>
+	</h1>
+
+	<div *ngIf="editable">
+		<section>
+			<label>Date:
+				<input type="datetime-local" formControlName="dateTime" />
+			</label>
+			<label>Place:
+				<select formControlName="placeId" [ngClass]="{ 'invalid': isInvalid(formControls.placeId) }">
+					<option value="0">select place</option>
+					<option *ngFor="let place of places" [ngValue]="place.id">{{ place.name }}</option>
+				</select>
+			</label>
+			<label>Match type:
+				<select formControlName="matchTypeId" [ngClass]="{ 'invalid': isInvalid(formControls.matchTypeId) }">
+					<option value="0">select match type</option>
+					<option *ngFor="let matchType of matchTypes" [ngValue]="matchType.id">{{ matchType.name }}</option>
+				</select>
+			</label>
+			<label>Competition:
+				<select formControlName="competitionId"
+					[ngClass]="{ 'invalid': isInvalid(formControls.competitionId) }">
+					<option value="0">select competition</option>
+					<option *ngFor="let competition of competitions" [ngValue]="competition.id">{{ competition.name }}
+					</option>
+				</select>
+			</label>
+		</section>
+		<section>
+			<label>Home team:
+				<select formControlName="homeTeamId" [ngClass]="{ 'invalid': isInvalid(formControls.homeTeamId) }">
+					<option value="0">select home team</option>
+					<option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
+				</select>
+			</label>
+			<label>Away team:
+				<select formControlName="awayTeamId" [ngClass]="{ 'invalid': isInvalid(formControls.awayTeamId) }">
+					<option value="0">select away team</option>
+					<option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
+				</select>
+			</label>
+			<label>Home team score:
+				<input style="width:128px" formControlName="homeTeamScore" placeholder="Home team score ..."
+					[ngClass]="{ 'invalid': isInvalid(formControls.homeTeamScore) }" />
+			</label>
+			<label>Away team score:
+				<input style="width:128px" formControlName="awayTeamScore" placeholder="Away team score ..."
+					[ngClass]="{ 'invalid': isInvalid(formControls.awayTeamScore) }" />
+			</label>
+		</section>
+	</div>
+
+	<div *ngIf="matchForm.get('players').value.length > 0 && editable">
+
+		<section>
+			TODO nastavovanie class=invalid pre aj hracov v zapase
+			<br />
+			TODO rozjebany Remove button
+		</section>
+
+		<section>
+			<label style="width:144px">Player</label>
+			<label style="width:80px">Goals</label>
+			<label style="width:80px">Assists</label>
+			<label style="width:80px">+/-</label>
+			<label style="width:80px">Yellow</label>
+			<label style="width:80px">Red</label>
+		</section>
+		<div formArrayName="players" *ngFor="let ps of matchForm.get('players').value; let playerIndex = index;">
+			<section [formGroupName]="playerIndex">
+				<label>
+					<select style="width:128px" formControlName="playerId">
+						<option value="0">select player</option>
+						<option *ngFor="let player of playerNames" [ngValue]="player.id">{{ player.name }}</option>
+					</select>
+				</label>
+				<label>
+					<input style="width:64px" formControlName="goals" placeholder="G" />
+				</label>
+				<label>
+					<input style="width:64px" formControlName="assists" placeholder="A" />
+				</label>
+				<label>
+					<input style="width:64px" formControlName="posNegPoints" placeholder="+/-" />
+				</label>
+				<label>
+					<input style="width:64px" formControlName="yellowCards" placeholder="YC" />
+				</label>
+				<label>
+					<input style="width:64px" formControlName="redCards" placeholder="RC" />
+				</label>
+				<label>
+					<div class="button" (click)="removePlayer(playerIndex)">Remove</div>
+				</label>
+			</section>
+		</div>
+	</div>
+
+	<div *ngIf="!editable">
+		<app-player-list [players]="matchPlayers" [expandedView]="false"></app-player-list>
+	</div>
+
+	<div *ngIf="mutualMatches != null && !editable">
+		<app-match-list [matches]="mutualMatches" [teamStats]="mutualTeamStats"></app-match-list>
+	</div>
+
+</form>

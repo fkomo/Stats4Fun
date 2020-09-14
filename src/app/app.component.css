@@ -1,0 +1,11 @@
+#footer {
+	text-align: center;
+}
+
+a {
+	color: var(--selected-font-color);
+	text-decoration: none;
+}
+a:hover {
+	color: var(--hilighted-font-color);
+}

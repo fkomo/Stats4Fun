@@ -1,0 +1,75 @@
+<form id="content" [formGroup]="playerForm" (ngSubmit)="savePlayer()">
+
+	<section>
+		<div class="button" type="submit" [class.hidden]="!editable || !playerForm.valid" (click)="savePlayer()">Save
+		</div>
+		<div class="button" [class.hidden]="editable" (click)="editPlayer()">Edit</div>
+		<div class="button" [class.hidden]="!editable || id == 0" (click)="deletePlayer()">Delete</div>
+		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
+	</section>
+
+	<h1 *ngIf="!editable">
+		<div class="detail-header">
+			<div class="center">{{ playerForm.get('name').value }} #{{ playerForm.get('number').value }}</div>
+		</div>
+		<div class="detail-tags">
+			<div>{{ getPlayerAge(playerForm.get('dateOfBirth').value) }} years old</div>
+			<div>{{ getEnum('playerPositions', playerForm.get('playerPositionId').value).name }}</div>
+			<div>{{ getEnum('teams', playerForm.get('teamId').value).name }}</div>
+			<div *ngIf="playerForm.get('retired').value">Retired</div>
+		</div>
+	</h1>
+
+	<div *ngIf="editable">
+		<div style="clear:both;"></div>
+		<section>
+			<label>Name:
+				<input style="width:128px" formControlName="name" placeholder="Player name ..."
+					[ngClass]="{ 'invalid': isInvalid(formControls.name) }" />
+			</label>
+			<label>Date of Birth:
+				<input type="date" formControlName="dateOfBirth"
+					[ngClass]="{ 'invalid': isInvalid(formControls.dateOfBirth) }" />
+			</label>
+			<label>Number:
+				<input style="width:128px" formControlName="number" placeholder="Player number ..." />
+			</label>
+		</section>
+		<section>
+			<label>Team:
+				<select formControlName="teamId" [ngClass]="{ 'invalid': isInvalid(formControls.teamId) }">
+					<option value="0">select team</option>
+					<option *ngFor="let item of teams" [ngValue]="item.id">{{ item.name }}</option>
+				</select>
+			</label>
+			<label>Position:
+				<select formControlName="playerPositionId"
+					[ngClass]="{ 'invalid': isInvalid(formControls.playerPositionId) }">
+					<option value="0">select position</option>
+					<option *ngFor="let item of playerPositions" [ngValue]="item.id">{{ item.name }}</option>
+				</select>
+			</label>
+		</section>
+		<section>
+			<label>Retired:
+				<input formControlName="retired" type="checkbox" class="check" />
+			</label>
+		</section>
+	</div>
+
+	<div *ngIf="!editable && stats != null && playerMatches != null">
+		<h2>Scoring</h2>
+		<div class="top-matches">
+			<div *ngFor="let m of bestScores">
+				<a href="/match/{{ m.matchId }}">{{ m.score }} {{ m.scoreType }} vs {{ getEnum('teams', m.opponentTeamId).name }}</a>
+			</div>
+		</div>
+		<app-scoring-timeline [matches]="playerMatches" [stats]="stats"></app-scoring-timeline>
+	</div>
+
+	<div *ngIf="playerMatches != null && !editable">
+		<h2>Matches</h2>
+		<app-match-list [matches]="playerMatches"></app-match-list>
+	</div>
+
+</form>

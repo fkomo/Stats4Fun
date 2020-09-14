@@ -1,0 +1,65 @@
+#content {
+  width: 720px;
+  overflow-x: auto;
+  margin: auto;
+}
+
+input,
+select {
+  display: block;
+  padding-left: 8px;
+  border: 0;
+  color: var(--secondary-font-color);
+  background-color: var(--element-bg-color);
+  height: 30px;
+}
+
+input.check {
+  background-color: var(--element-bg-color);
+  width: 16px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  display: table-cell;
+  height: 32px;
+  line-height: 32px;
+  padding-right: 16px;
+}
+
+.invalid {
+  border-left: 4px solid red;
+}
+
+h2 {
+  text-align: center;
+}
+
+.top-matches {
+  width: 100%;
+  display: table;
+  line-height: 32px;
+  margin-bottom: 16px;
+}
+
+.top-matches div {
+  /* float: left; */
+  display: table-cell;
+  border-left: 16px solid var(--primary-bg-color);
+  border-right: 16px solid var(--primary-bg-color);
+}
+
+.top-matches div a {
+  display: block;
+  text-align: center;
+  background-color: var(--element-bg-color);
+  text-decoration: none;
+  color: var(--secondary-font-color);
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.top-matches div a:hover {
+  color: var(--hilighted-font-color);
+}
