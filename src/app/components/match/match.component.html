@@ -30,6 +30,7 @@
 	</h1>
 
 	<div *ngIf="editable">
+		<div style="clear:both;"></div>
 		<section>
 			<label>Date:
 				<input type="datetime-local" formControlName="dateTime" />
@@ -40,6 +41,8 @@
 					<option *ngFor="let place of places" [ngValue]="place.id">{{ place.name }}</option>
 				</select>
 			</label>
+		</section>
+		<section>
 			<label>Match type:
 				<select formControlName="matchTypeId" [ngClass]="{ 'invalid': isInvalid(formControls.matchTypeId) }">
 					<option value="0">select match type</option>
@@ -68,6 +71,8 @@
 					<option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
 				</select>
 			</label>
+		</section>
+		<section>
 			<label>Home team score:
 				<input style="width:128px" formControlName="homeTeamScore" placeholder="Home team score ..."
 					[ngClass]="{ 'invalid': isInvalid(formControls.homeTeamScore) }" />

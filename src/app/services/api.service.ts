@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Match } from '../models/match';
-import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, COMPETITIONS, PLACES, MATCH_TYPES, TEAMS, SEASONS, MATCH_RESULTS, PLAYER_POSITIONS, TEAM_STATS } from './mock-data';
+import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, TEAM_STATS } from './mock-data';
 import { Player } from '../models/player';
 import { Enum, EnumAdapter } from '../models/enum';
 import { LogService } from './log.service';
@@ -45,12 +45,9 @@ export class ApiService {
 	enumPlayers(): Observable<Enum[]> {
 		this.log.add(`enumPlayers`);
 
-		var playersEnum: Enum[] = [];
-		PLAYERS.forEach(p => {
-			playersEnum.push({ id: p.id, name: p.name } as Enum);
-		});
-
-		return of(playersEnum);
+		return this.http.get(`${ this.baseUrl }/enums/players`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
 	enumCompetitions(): Observable<Enum[]> {
@@ -61,7 +58,7 @@ export class ApiService {
 		);
 	}
 
-	enumTeams(): Observable<any> {
+	enumTeams(): Observable<Enum[]> {
 		this.log.add(`enumTeams`);
 
 		return this.http.get(`${ this.baseUrl }/enums/teams`).pipe(
