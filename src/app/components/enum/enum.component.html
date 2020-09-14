@@ -1,6 +1,6 @@
-<section id="enum-content">
+<section id="enum-content" *ngIf="items">
 
-	<h2>{{ this.enumName }}</h2>
+	<h2>{{ this.enumName }} ({{ items.length }})</h2>
 	<ul>
 		<li [class.clickable]="!modifyNotAllowed" value="{{ item.id }}" *ngFor="let item of items" (click)="renameItem(item.id);">
 			{{ item.name }}

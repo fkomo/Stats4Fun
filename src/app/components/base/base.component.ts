@@ -33,6 +33,8 @@ export class BaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		// TODO these enums have to be loaded before any page rendering - use forkJoin?
+
 		this.seasons = this.getEnumFromStorage('seasons');
 		if (this.seasons == null)
 			this.apiService.enumByName('seasons').subscribe(i => {
@@ -92,7 +94,7 @@ export class BaseComponent implements OnInit {
 
 		switch (enumName) {
 			case 'places':
-				return this.places.find(i => i.id == id);
+				return this.places != null ? this.places.find(i => i.id == id) : null;
 
 			case 'matchTypes':
 				return this.matchTypes.find(i => i.id == id);

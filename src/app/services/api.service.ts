@@ -37,6 +37,7 @@ export class ApiService {
 			case 'seasons': return this.enumSeasons();
 			case 'matchResults': return this.enumMatchResults();
 			case 'playerPositions': return this.enumPlayerPositions();
+			case 'states': return this.enumStates();
 			default:
 				return null;
 		}
@@ -45,7 +46,7 @@ export class ApiService {
 	enumPlayers(): Observable<Enum[]> {
 		this.log.add(`enumPlayers`);
 
-		return this.http.get(`${ this.baseUrl }/enums/players`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/players`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -53,7 +54,7 @@ export class ApiService {
 	enumCompetitions(): Observable<Enum[]> {
 		this.log.add(`enumCompetitions`);
 
-		return this.http.get(`${ this.baseUrl }/enums/competitions`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/competitions`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -61,7 +62,7 @@ export class ApiService {
 	enumTeams(): Observable<Enum[]> {
 		this.log.add(`enumTeams`);
 
-		return this.http.get(`${ this.baseUrl }/enums/teams`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/teams`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -69,7 +70,7 @@ export class ApiService {
 	enumPlaces(): Observable<Enum[]> {
 		this.log.add(`enumPlaces`);
 
-		return this.http.get(`${ this.baseUrl }/enums/places`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/places`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -77,7 +78,7 @@ export class ApiService {
 	enumMatchTypes(): Observable<Enum[]> {
 		this.log.add(`enumMatchTypes`);
 
-		return this.http.get(`${ this.baseUrl }/enums/matchTypes`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/matchTypes`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -85,7 +86,7 @@ export class ApiService {
 	enumSeasons(): Observable<Enum[]> {
 		this.log.add(`enumSeasons`);
 
-		return this.http.get(`${ this.baseUrl }/enums/seasons`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/seasons`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -93,7 +94,7 @@ export class ApiService {
 	enumMatchResults(): Observable<Enum[]> {
 		this.log.add(`enumMatchResults`);
 
-		return this.http.get(`${ this.baseUrl }/enums/matchResults`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/matchResults`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
@@ -101,21 +102,34 @@ export class ApiService {
 	enumPlayerPositions(): Observable<Enum[]> {
 		this.log.add(`enumPlayerPositions`);
 
-		return this.http.get(`${ this.baseUrl }/enums/playerPositions`).pipe(
+		return this.http.get(`${this.baseUrl}/enums/playerPositions`).pipe(
 			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
 		);
 	}
 
-	saveEnum(enumName: string, item: Enum): Enum {
-		this.log.add(item);
+	enumStates(): Observable<Enum[]> {
+		this.log.add(`enumStates`);
 
-		return item;
+		return this.http.get(`${this.baseUrl}/enums/states`).pipe(
+			map((data: any[]) => data.map((item) => this.adapter.adapt(item)))
+		);
 	}
 
-	deleteEnum(enumName: string, id: number): boolean {
-		this.log.add(`deleteEnum(${enumName}, ${id})`);
+	saveEnum(enumName: string, item: Enum): Observable<Enum> {
+		this.log.add(item);
 
-		return true;
+		// insert
+		if (item.id == 0) {
+			return this.http.post(`${this.baseUrl}/enums/${enumName}`, { name: item.name, id: item.id }).pipe(
+				map((data: any) => this.adapter.adapt(item))
+			);
+		}
+		// modify
+		else {
+			return this.http.put(`${this.baseUrl}/enums/${enumName}/${item.id}`, { name: item.name, id: item.id }).pipe(
+				map((data: any) => this.adapter.adapt(item))
+			);
+		}
 	}
 
 	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,

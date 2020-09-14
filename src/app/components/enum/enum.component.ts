@@ -20,7 +20,11 @@ export class EnumComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.apiService.enumByName(this.enumName).subscribe(i => this.items = i);;
+		this.reload();
+	}
+
+	reload() {
+		this.apiService.enumByName(this.enumName).subscribe(i => this.items = i);
 	}
 
 	addItem(): void {
@@ -37,7 +41,9 @@ export class EnumComponent implements OnInit {
 			id: 0,
 			name: newItemName
 		};
-		this.apiService.saveEnum(this.enumName, newItem);
+		this.apiService.saveEnum(singularEnumName, newItem).subscribe(
+			i => this.reload()
+		);
 	}
 
 	renameItem(id: number): void {
@@ -54,6 +60,9 @@ export class EnumComponent implements OnInit {
 			id: id,
 			name: newName
 		};
-		this.apiService.saveEnum(this.enumName, modifiedItem);
+		var singularEnumName = this.enumName.substr(0, this.enumName.length - 1);
+		this.apiService.saveEnum(singularEnumName, modifiedItem).subscribe(
+			i => this.reload()
+		);
 	}
 }
