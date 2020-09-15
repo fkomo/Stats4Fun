@@ -66,6 +66,8 @@ export class MatchComponent extends BaseComponent {
 
 	private getMatchFromUrl(): Match {
 		const id = +this.route.snapshot.paramMap.get('id');
+		if (id == 0)
+			return null;
 
 		// get match from api
 		var match = this.apiService.getMatch(id);
@@ -91,22 +93,10 @@ export class MatchComponent extends BaseComponent {
 				var playersFormGroup = this.createPlayerFormGroup(p);
 				playersFormGroup.disable();
 				(this.matchForm.get('players') as FormArray).push(playersFormGroup);
-
-				var player = this.getPlayer(p.playerId);
-				this.matchPlayers.push({
-					id: p.playerId,
-					number: player.number,
-					name: player.name,
-					playerPositionId: player.playerPositionId,
-					goals: p.goals,
-					assists: p.assists,
-					points: p.points,
-					posNegPoints: p.posNegPoints,
-					yellowCards: p.yellowCards,
-					redCards: p.redCards,
-					retired: player.retired,
-				} as PlayerStats);
 			});
+
+			this.apiService.listMatchPlayers(match.id)
+				.subscribe(i => this.matchPlayers = i);
 
 			this.apiService.listMutualMatches(match.homeTeamId, match.awayTeamId)
 				.subscribe(i => this.mutualMatches = i);

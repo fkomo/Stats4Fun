@@ -8,7 +8,7 @@
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
 	</section>
 
-	<h1 *ngIf="!editable">
+	<h1 *ngIf="!editable && enumsLoaded">
 		<div class="detail-header">
 			<div class="right" [ngStyle]="{'width.%':50 }" 
 				[class.winner]="matchForm.get('homeTeamScore').value > matchForm.get('awayTeamScore').value">
@@ -131,11 +131,11 @@
 	</div>
 
 	<div *ngIf="!editable">
-		<app-player-list [players]="matchPlayers" [expandedView]="false"></app-player-list>
+		<app-player-list *ngIf="enumsLoaded" [players]="matchPlayers" [expandedView]="false"></app-player-list>
 	</div>
 
 	<div *ngIf="mutualMatches != null && !editable">
-		<app-match-list [matches]="mutualMatches" [teamStats]="mutualTeamStats"></app-match-list>
+		<app-match-list *ngIf="enumsLoaded" [matches]="mutualMatches" [teamStats]="mutualTeamStats"></app-match-list>
 	</div>
 
 </form>

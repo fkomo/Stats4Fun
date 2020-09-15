@@ -8,7 +8,7 @@
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
 	</section>
 
-	<h1 *ngIf="!editable">
+	<h1 *ngIf="!editable && enumsLoaded">
 		<div class="detail-header">
 			<div class="center">{{ playerForm.get('name').value }} #{{ playerForm.get('number').value }}</div>
 		</div>
@@ -57,7 +57,7 @@
 		</section>
 	</div>
 
-	<div *ngIf="!editable && stats != null && playerMatches != null">
+	<div *ngIf="!editable && stats != null && playerMatches != null && enumsLoaded">
 		<h2>Scoring</h2>
 		<div class="top-matches">
 			<div *ngFor="let m of bestScores">

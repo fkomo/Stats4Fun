@@ -60,6 +60,8 @@ export class PlayerComponent extends BaseComponent {
 
 	private getPlayerFromUrl(): Player {
 		const id = +this.route.snapshot.paramMap.get('id');
+		if (id == 0)
+			return null;
 
 		// get match from api
 		var player = this.apiService.getPlayer(id);

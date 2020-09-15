@@ -38,6 +38,6 @@
 </div>
 
 <div id="content">
-	<app-match-list [matches]="matches" [teamStats]="teamStats"></app-match-list>
+	<app-match-list *ngIf="enumsLoaded" [matches]="matches" [teamStats]="teamStats"></app-match-list>
 </div>
 
