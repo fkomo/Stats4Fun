@@ -20,8 +20,7 @@ export class BaseComponent implements OnInit {
 	competitions: Enum[];
 	playerNames: Enum[];
 	playerPositions: Enum[];
-
-	private allPlayers: Player[];
+	enumsLoaded: boolean = false;
 
 	protected comboBoxValidator = [
 		Validators.min(1),
@@ -33,64 +32,37 @@ export class BaseComponent implements OnInit {
 
 	ngOnInit(): void {
 
-		// TODO these enums have to be loaded before any page rendering - use forkJoin?
-
-		this.seasons = this.getEnumFromStorage('seasons');
-		if (this.seasons == null)
-			this.apiService.enumByName('seasons').subscribe(i => {
-				this.seasons = this.setStorage('seasons', i);
+		let enumsInStorage = this.getBoolFromStorage('enumsLoaded');
+		if (enumsInStorage) {
+			this.seasons = this.getEnumFromStorage('seasons');
+			this.teams = this.getEnumFromStorage('teams');
+			this.matchTypes = this.getEnumFromStorage('matchTypes');
+			this.places = this.getEnumFromStorage('places');
+			this.matchResults = this.getEnumFromStorage('matchResults');
+			this.competitions = this.getEnumFromStorage('competitions');
+			this.playerNames = this.getEnumFromStorage('playerNames');
+			this.playerPositions = this.getEnumFromStorage('playerPositions');
+			this.enumsLoaded = true;
+		}
+		else {
+			this.apiService.enumAll().subscribe(allEnums => {
+				this.seasons = this.setStorage('seasons', allEnums[0]);
+				this.teams = this.setStorage('teams', allEnums[1]);
+				this.matchTypes = this.setStorage('matchTypes', allEnums[2]);
+				this.places = this.setStorage('places', allEnums[3]);
+				this.matchResults = this.setStorage('matchResults', allEnums[4]);
+				this.competitions = this.setStorage('competitions', allEnums[5]);
+				this.playerNames = this.setStorage('playerNames', allEnums[6]);
+				this.playerPositions = this.setStorage('playerPositions', allEnums[7]);
+				this.enumsLoaded = this.setStorage('enumsLoaded', true);
 			});
-
-		this.teams = this.getEnumFromStorage('teams');
-		if (this.teams == null)
-			this.apiService.enumByName('teams').subscribe(i => {
-				this.teams = this.setStorage('teams', i);
-			});
-
-		this.matchTypes = this.getEnumFromStorage('matchTypes');
-		if (this.matchTypes == null)
-			this.apiService.enumByName('matchTypes').subscribe(i => {
-				this.matchTypes = this.setStorage('matchTypes', i);
-			});
-
-		this.places = this.getEnumFromStorage('places');
-		if (this.places == null)
-			this.apiService.enumByName('places').subscribe(i => {
-				this.places = this.setStorage('places', i);
-			});
-
-		this.matchResults = this.getEnumFromStorage('matchResults');
-		if (this.matchResults == null)
-			this.apiService.enumByName('matchResults').subscribe(i => {
-				this.matchResults = this.setStorage('matchResults', i);
-			});
-
-		this.competitions = this.getEnumFromStorage('competitions');
-		if (this.competitions == null)
-			this.apiService.enumByName('competitions').subscribe(i => {
-				this.competitions = this.setStorage('competitions', i);
-			});
-
-		this.playerNames = this.getEnumFromStorage('playerNames');
-		if (this.playerNames == null)
-			this.apiService.enumByName('players').subscribe(i => {
-				this.playerNames = this.setStorage('playerNames', i);
-			});
-			
-		this.playerPositions = this.getEnumFromStorage('playerPositions');
-		if (this.playerPositions == null)
-			this.apiService.enumByName('playerPositions').subscribe(i => {
-				this.playerPositions = this.setStorage('playerPositions', i);
-			});
-
-		this.apiService.listPlayers().subscribe(i => this.allPlayers = i);
-	}
-
-	protected getPlayer(id: number): Player {
-		return this.allPlayers.find(i => i.id == id);
+		}
 	}
 
 	public getEnum(enumName: string, id: number): Enum {
+
+		if (!this.enumsLoaded)
+			return null;
 
 		switch (enumName) {
 			case 'places':
@@ -128,6 +100,14 @@ export class BaseComponent implements OnInit {
 			return Number(JSON.parse(fromSession));
 
 		return defaultValue;
+	}
+
+	getBoolFromStorage(key: string): boolean {
+		var fromSession = sessionStorage.getItem(key);
+		if (fromSession != null)
+			return Boolean(JSON.parse(fromSession));
+
+		return false;
 	}
 
 	getEnumFromStorage(key: string): Enum[] {
