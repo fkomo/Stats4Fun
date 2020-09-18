@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { PlayerStats } from 'src/app/models/stats';
 import { ApiService } from '../../services/api.service';
 import { BaseComponent } from '../base/base.component';
-import { PlayerStats } from '../../models/playerStats';
 
 @Component({
 	selector: 'app-player-list',
@@ -30,6 +30,8 @@ export class PlayerListComponent extends BaseComponent {
 	}
 
 	sort(columnName: string) {
+		if (this.players == null)
+			return;
 
 		this.selectedColumn = columnName;
 

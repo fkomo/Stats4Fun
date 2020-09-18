@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Match } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
-import { PlayerMatchStats } from '../../models/playerMatchStats';
+import { PlayerMatchStats } from '../../models/stats';
 import { BestScore } from '../../models/bestScore';
 
 @Component({
@@ -17,9 +17,11 @@ import { BestScore } from '../../models/bestScore';
 export class PlayerComponent extends BaseComponent {
 
 	id: number;
-	playerMatches: Match[];
-	stats: PlayerMatchStats[];
+	playerMatches: Match[] = [];
+	stats: PlayerMatchStats[] = [];
 	bestScores: BestScore[] = [];
+
+	seasonId: number;
 
 	playerForm: FormGroup;
 	editable: boolean;
@@ -33,6 +35,7 @@ export class PlayerComponent extends BaseComponent {
 
 		this.id = 0;
 		this.editable = false;
+		this.seasonId = 0;
 
 		this.playerForm = this.formBuilder.group({
 			id: this.id,
@@ -53,88 +56,95 @@ export class PlayerComponent extends BaseComponent {
 
 	ngOnInit(): void {
 		super.ngOnInit();
-
-		if (!this.getPlayerFromUrl())
-			this.enableForm(true);
+		this.getPlayerFromUrl();
 	}
 
-	private getPlayerFromUrl(): Player {
+	private getPlayerFromUrl() {
 		const id = +this.route.snapshot.paramMap.get('id');
-		if (id == 0)
-			return null;
+		if (id == 0) {
+			this.enableForm(true);
+			return;
+		}
 
 		// get match from api
-		var player = this.apiService.getPlayer(id);
-		if (player != null) {
-			// create form
-			this.playerForm.patchValue({
-				id: player.id,
-				name: player.name,
-				dateOfBirth: player.dateOfBirth.toISOString().slice(0, 10),
-				number: player.number,
-				teamId: player.teamId,
-				playerPositionId: player.playerPositionId,
-				retired: player.retired,
-			});
-			this.id = player.id;
+		this.apiService.getPlayer(id).subscribe(player => {
+			if (player != null) {
+				this.playerForm.patchValue({
+					id: player.id,
+					name: player.name,
+					dateOfBirth: player.dateOfBirth != null ? player.dateOfBirth.toISOString().slice(0, 10) : null,
+					number: player.number,
+					teamId: player.teamId,
+					playerPositionId: player.playerPositionId,
+					retired: player.retired,
+				});
+				this.id = player.id;
 
-			console.log(player.dateOfBirth.toISOString());
+				if (this.seasonId == 0)
+					this.seasonId = this.seasons[0].id;
 
-			this.apiService.listPlayerMatches(player.id)
-				.subscribe(i => {
-					this.playerMatches = i;
+				this.getSeasonStats(this.seasonId);
+			}
+			else
+				this.enableForm(true);
+		});
+	}
 
-					this.apiService.listPlayerMatchesStats(player.id)
-						.subscribe(i2 => {
-							this.stats = i2;
+	getSeasonStats(seasonId: number) {
+		if (seasonId == 0)
+			return;
 
-							this.bestScores = [];
+		this.stats = [];
+		this.playerMatches = [];
+		this.seasonId = seasonId;
 
-							var mostGoals = this.stats.reduce(function (a, b) {
-								return a.goals > b.goals ? a : b
-							});
+		this.apiService.listPlayerMatches(this.id, this.seasonId)
+			.subscribe(i => {
+				this.playerMatches = i;
+				if (this.playerMatches.length > 0) {
+					this.apiService.listPlayerMatchesStats(this.id, this.seasonId).subscribe(i2 => {
+						this.stats = i2;
+
+						this.bestScores = [];
+
+						var mostGoals = this.stats.reduce(function (a, b) {
+							return a.goals > b.goals ? a : b
+						});
+						if (mostGoals != null && mostGoals.goals > 0) {
 							this.bestScores.push({
 								score: mostGoals.goals,
 								scoreType: 'goals',
 								matchId: mostGoals.matchId,
-								opponentTeamId: this.playerMatches.find(m => m.id == mostGoals.matchId).awayTeamId,
+								opponentTeamId: this.GetOpponentTeamId(mostGoals.matchId),
 							});
+						}
 
-							var mostAssists = this.stats.reduce(function (a, b) {
-								return a.assists > b.assists ? a : b
-							});
+						var mostAssists = this.stats.reduce(function (a, b) {
+							return a.assists > b.assists ? a : b
+						});
+						if (mostAssists != null && mostAssists.assists > 0) {
 							this.bestScores.push({
 								score: mostAssists.assists,
 								scoreType: 'assists',
 								matchId: mostAssists.matchId,
-								opponentTeamId: this.playerMatches.find(m => m.id == mostAssists.matchId).awayTeamId,
+								opponentTeamId: this.GetOpponentTeamId(mostAssists.matchId),
 							});
+						}
 
-							var mostPoints = this.stats.reduce(function (a, b) {
-								return a.posNegPoints > b.posNegPoints ? a : b
-							});
+						var mostPoints = this.stats.reduce(function (a, b) {
+							return a.posNegPoints > b.posNegPoints ? a : b
+						});
+						if (mostPoints != null && mostPoints.posNegPoints > 0) {
 							this.bestScores.push({
 								score: mostPoints.posNegPoints,
 								scoreType: '+/- points',
 								matchId: mostPoints.matchId,
-								opponentTeamId: this.playerMatches.find(m => m.id == mostPoints.matchId).awayTeamId,
+								opponentTeamId: this.GetOpponentTeamId(mostPoints.matchId),
 							});
-
-							// var leastPoints = this.stats.reduce(function (a, b) {
-							// 	return a.posNegPoints < b.posNegPoints ? a : b
-							// });
-							// this.bestScores.push({
-							// 	score: leastPoints.posNegPoints,
-							// 	scoreType: '+/- points',
-							// 	matchId: leastPoints.matchId,
-							// 	opponentTeamId: this.playerMatches.find(m => m.id == leastPoints.matchId).awayTeamId,
-							// });
-						});
-				});
-
-		}
-
-		return player;
+						}
+					});
+				}
+			});
 	}
 
 	savePlayer() {
@@ -180,6 +190,8 @@ export class PlayerComponent extends BaseComponent {
 	}
 
 	getPlayerAge(dateOfBirth: Date): number {
+		if (dateOfBirth == null)
+			return null;
 		var timeDiff = Math.abs(Date.now() - new Date(dateOfBirth).getTime());
 		return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
 	}
@@ -188,5 +200,13 @@ export class PlayerComponent extends BaseComponent {
 
 	isInvalid(control: AbstractControl): boolean {
 		return control.invalid && (control.dirty || control.touched || this.editable);
+	}
+
+	GetOpponentTeamId(matchId: number): number {
+		var match = this.playerMatches.find(m => m.id == matchId);
+		if (this.getEnum('teams', match.homeTeamId).name.startsWith('4Fun'))
+			return match.awayTeamId;
+
+		return match.homeTeamId;
 	}
 }

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Match } from '../models/match';
+import { Match, MatchAdapter } from '../models/match';
 import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, TEAM_STATS } from './mock-data';
-import { Player } from '../models/player';
+import { Player, PlayerAdapter } from '../models/player';
+import { PlayerMatchStatsAdapter, PlayerStatsAdapter } from '../models/stats';
 import { Enum, EnumAdapter } from '../models/enum';
 import { LogService } from './log.service';
-import { PlayerStats } from '../models/playerStats';
-import { TeamStats } from '../models/teamStats';
+import { PlayerStats, TeamStats, PlayerMatchStats } from '../models/stats';
 import { Observable, of } from 'rxjs';
-import { PlayerMatchStats } from '../models/playerMatchStats';
 import { map } from "rxjs/operators";
 import { forkJoin } from 'rxjs';  // RxJS 6 syntax
 
@@ -23,10 +22,16 @@ export class ApiService {
 	constructor(
 		private log: LogService,
 		private http: HttpClient,
-		private enumAdapter: EnumAdapter) {
+		private enumAdapter: EnumAdapter,
+		private playerAdapter: PlayerAdapter,
+		private playerStatsAdapter: PlayerStatsAdapter,
+		private matchAdapter: MatchAdapter,
+		private playerMatchStatsAdapter: PlayerMatchStatsAdapter) {
 	}
 
 	enumAll(): Observable<Enum[][]> {
+		this.log.add(`enumAll()`);
+
 		return forkJoin([
 			this.enumSeasons(),
 			this.enumTeams(),
@@ -60,7 +65,8 @@ export class ApiService {
 	enumPlayerNames(): Observable<Enum[]> {
 		this.log.add(`enumPlayerNames`);
 
-		return this.http.get(`${this.baseUrl}/enums/players`).pipe(
+		// get: /enums/playernames
+		return this.http.get(`${this.baseUrl}/enums/playerNames`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -68,6 +74,7 @@ export class ApiService {
 	enumCompetitions(): Observable<Enum[]> {
 		this.log.add(`enumCompetitions`);
 
+		// get: /enums/competitions
 		return this.http.get(`${this.baseUrl}/enums/competitions`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -76,6 +83,7 @@ export class ApiService {
 	enumTeams(): Observable<Enum[]> {
 		this.log.add(`enumTeams`);
 
+		// get: /enums/teams
 		return this.http.get(`${this.baseUrl}/enums/teams`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -84,6 +92,7 @@ export class ApiService {
 	enumPlaces(): Observable<Enum[]> {
 		this.log.add(`enumPlaces`);
 
+		// get: /enums/places
 		return this.http.get(`${this.baseUrl}/enums/places`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -92,6 +101,7 @@ export class ApiService {
 	enumMatchTypes(): Observable<Enum[]> {
 		this.log.add(`enumMatchTypes`);
 
+		// get: /enums/matchtypes
 		return this.http.get(`${this.baseUrl}/enums/matchTypes`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -100,6 +110,7 @@ export class ApiService {
 	enumSeasons(): Observable<Enum[]> {
 		this.log.add(`enumSeasons`);
 
+		// get: /enums/seasons
 		return this.http.get(`${this.baseUrl}/enums/seasons`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -108,6 +119,7 @@ export class ApiService {
 	enumMatchResults(): Observable<Enum[]> {
 		this.log.add(`enumMatchResults`);
 
+		// get: /enums/matchresults
 		return this.http.get(`${this.baseUrl}/enums/matchResults`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -116,6 +128,7 @@ export class ApiService {
 	enumPlayerPositions(): Observable<Enum[]> {
 		this.log.add(`enumPlayerPositions`);
 
+		// get: /enums/playerpositions
 		return this.http.get(`${this.baseUrl}/enums/playerPositions`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -124,6 +137,7 @@ export class ApiService {
 	enumStates(): Observable<Enum[]> {
 		this.log.add(`enumStates`);
 
+		// get: /enums/states
 		return this.http.get(`${this.baseUrl}/enums/states`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
@@ -134,60 +148,18 @@ export class ApiService {
 
 		// insert
 		if (item.id == 0) {
+			// post: /enums/*
 			return this.http.post(`${this.baseUrl}/enums/${enumName}`, { name: item.name, id: item.id }).pipe(
 				map((data: any) => this.enumAdapter.adapt(item))
 			);
 		}
 		// modify
 		else {
+			// put: /enums/*/:id
 			return this.http.put(`${this.baseUrl}/enums/${enumName}/${item.id}`, { name: item.name, id: item.id }).pipe(
 				map((data: any) => this.enumAdapter.adapt(item))
 			);
 		}
-	}
-
-	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
-		competitionId: number): Observable<TeamStats> {
-		this.log.add(`getTeamStats(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
-
-		return of(TEAM_STATS[1]);
-	}
-
-	getMutualStats(team1Id: number, team2Id: number): Observable<TeamStats> {
-		this.log.add(`getMutualStats(${team1Id}, ${team2Id})`);
-
-		return of(TEAM_STATS[0]);
-	}
-
-	listMutualMatches(team1Id: number, team2Id: number): Observable<Match[]> {
-		this.log.add(`listMutualMatches(${team1Id}, ${team2Id})`);
-
-		return of(MATCHES);
-	}
-
-	listMatches(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
-		competitionId: number): Observable<Match[]> {
-		this.log.add(`listMatches(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
-
-		return of(MATCHES);
-	}
-
-	listPlayers(): Observable<Player[]> {
-		this.log.add(`listPlayers`);
-
-		return of(PLAYERS);
-	}
-
-	listPlayerMatches(id: number): Observable<Match[]> {
-		this.log.add(`listPlayerMatches(${id})`);
-
-		return of(MATCHES);
-	}
-
-	listPlayerMatchesStats(id: number): Observable<PlayerMatchStats[]> {
-		this.log.add(`listPlayerMatchesStats(${id})`);
-
-		return of(PLAYER_MATCH_STATS.filter(m => m.playerId == id));
 	}
 
 	listPlayerStats(
@@ -195,19 +167,100 @@ export class ApiService {
 		playerPositionId: number): Observable<PlayerStats[]> {
 		this.log.add(`listPlayerStats(${seasonId}, ${matchTypeId}, ${competitionId}, ${teamId}, ${playerPositionId})`);
 
-		return of(PLAYER_STATS);
+		// post: /players/stats
+		return this.http.post(`${this.baseUrl}/players/stats`,
+			{
+				seasonId: seasonId == 0 ? null : seasonId,
+				matchTypeId: matchTypeId == 0 ? null : matchTypeId,
+				competitionId: competitionId == 0 ? null : competitionId,
+				teamId: teamId == 0 ? null : teamId,
+				playerPositionId: playerPositionId == 0 ? null : playerPositionId,
+			}).pipe(
+				map((data: any[]) => data.map((item) => this.playerStatsAdapter.adapt(item)))
+			);
+	}
+
+	getPlayer(id: number): Observable<Player> {
+		this.log.add(`getPlayer(${id})`);
+
+		// get: /players/:id
+		return this.http.get(`${this.baseUrl}/players/${id}`).pipe(
+			map((data: any) => this.playerAdapter.adapt(data))
+		);
+	}
+
+	savePlayer(player: Player): Player {
+		this.log.add(player);
+
+		// post: /player
+		// put: /player/:id
+		return player;
+	}
+
+	deletePlayer(id: number): boolean {
+		this.log.add(`deletePlayer(${id})`);
+
+		// delete: /player/:id
+		return true;
+	}
+
+	listPlayerMatches(id: number, seasonId: number): Observable<Match[]> {
+		this.log.add(`listPlayerMatches(${id}, ${seasonId})`);
+
+		// /matches/player/:id
+		return this.http.post(`${this.baseUrl}/matches/player/${id}`, {
+			season: seasonId == 0 ? null : seasonId,
+		}).pipe(
+			map((data: any[]) => data.map((item) => this.matchAdapter.adapt(item)))
+		);
+	}
+
+	listPlayerMatchesStats(id: number, seasonId: number): Observable<PlayerMatchStats[]> {
+		this.log.add(`listPlayerMatchesStats(${id}, ${seasonId})`);
+
+		// /stats/player/:id
+		return this.http.post(`${this.baseUrl}/stats/player/${id}`, {
+			season: seasonId == 0 ? null : seasonId,
+		}).pipe(
+			map((data: any[]) => data.map((item) => this.playerMatchStatsAdapter.adapt(item)))
+		);
+	}
+
+	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
+		competitionId: number): Observable<TeamStats> {
+		this.log.add(`getTeamStats(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
+
+		// /team/stats
+		return of(TEAM_STATS[1]);
+	}
+
+	getMutualStats(team1Id: number, team2Id: number): Observable<TeamStats> {
+		this.log.add(`getMutualStats(${team1Id}, ${team2Id})`);
+
+		// /stats/teams
+		return of(TEAM_STATS[0]);
+	}
+
+	listMutualMatches(team1Id: number, team2Id: number): Observable<Match[]> {
+		this.log.add(`listMutualMatches(${team1Id}, ${team2Id})`);
+
+		// /matches/teams
+		return of(MATCHES);
+	}
+
+	listMatches(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
+		competitionId: number): Observable<Match[]> {
+		this.log.add(`listMatches(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
+
+		// /matches
+		return of(MATCHES);
 	}
 
 	listMatchPlayers(id: number): Observable<PlayerStats[]> {
 		this.log.add(`listMatchPlayers(${id})`);
 
+		// /stats/match/:id
 		return of(PLAYER_STATS);
-	}
-
-	getPlayer(id: number): Player {
-		this.log.add(`getPlayer(${id})`);
-
-		return PLAYERS.find(p => p.id == id);
 	}
 
 	getMatch(id: number): Match {
@@ -217,30 +270,21 @@ export class ApiService {
 		if (match != null)
 			match.players = PLAYER_MATCH_STATS.filter(ps => ps.matchId == match.id);
 
+		// /match/:id
 		return match;
 	}
 
 	saveMatch(match: Match): Match {
 		this.log.add(match);
 
+		// /match/:id
 		return match;
 	}
 
 	deleteMatch(id: number): boolean {
 		this.log.add(`deleteMatch(${id})`);
 
-		return true;
-	}
-
-	savePlayer(player: Player): Player {
-		this.log.add(player);
-
-		return player;
-	}
-
-	deletePlayer(id: number): boolean {
-		this.log.add(`deletePlayer(${id})`);
-
+		// /match/:id
 		return true;
 	}
 }

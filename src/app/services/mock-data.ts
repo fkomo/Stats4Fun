@@ -1,8 +1,6 @@
 import { Match } from '../models/match';
 import { Player } from '../models/player';
-import { PlayerStats } from '../models/playerStats';
-import { PlayerMatchStats } from '../models/playerMatchStats';
-import { TeamStats } from '../models/teamStats';
+import { PlayerStats, PlayerMatchStats, TeamStats } from '../models/stats';
 
 export const PLAYERS: Player[] = [
 	{ id: 1, name: 'Filip Komorovský', dateOfBirth: new Date("1985-06-19"), number: 13, teamId: 1, playerPositionId: 1, retired: false },

@@ -2,14 +2,12 @@ import { Injectable } from "@angular/core";
 import { Adapter } from "../core/adapter";
 
 export class Enum {
-
+	id: number;
+	name: string;
 	constructor(id: number, name: string) {
 		this.id = id;
 		this.name = name;
 	}
-
-	id: number;
-	name: string;
 }
 
 @Injectable({

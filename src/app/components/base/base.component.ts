@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Enum } from '../../models/enum';
 import { ApiService } from '../../services/api.service';
-import { Player } from '../../models/player';
 import { Validators } from '@angular/forms';
 
 @Component({
@@ -61,12 +60,13 @@ export class BaseComponent implements OnInit {
 
 	public getEnum(enumName: string, id: number): Enum {
 
-		if (!this.enumsLoaded)
+		if (!this.enumsLoaded) {
 			return null;
+		}
 
 		switch (enumName) {
 			case 'places':
-				return this.places != null ? this.places.find(i => i.id == id) : null;
+				return this.places.find(i => i.id == id);
 
 			case 'matchTypes':
 				return this.matchTypes.find(i => i.id == id);
@@ -77,9 +77,9 @@ export class BaseComponent implements OnInit {
 			case 'teams':
 				return this.teams.find(i => i.id == id);
 
-			case 'playerPositions':
+			case 'playerPositions': {
 				return this.playerPositions.find(i => i.id == id);
-
+			}
 			case 'seasons':
 				return this.seasons.find(i => i.id == id);
 

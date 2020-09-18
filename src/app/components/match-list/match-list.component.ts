@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Match } from '../../models/match';
 import { ApiService } from '../../services/api.service';
 import { BaseComponent } from '../base/base.component';
-import { TeamStats } from '../../models/teamStats';
+import { TeamStats } from '../../models/stats';
 
 @Component({
 	selector: 'app-match-list',
@@ -39,6 +39,8 @@ export class MatchListComponent extends BaseComponent {
 	}
 
 	sort(columnName: string) {
+		if (this.matches == null)
+			return;
 
 		this.selectedColumn = columnName;
 
@@ -75,11 +77,16 @@ export class MatchListComponent extends BaseComponent {
 	}
 
 	getMatchColor(match: Match): string {
-		if (match.homeTeamScore > match.awayTeamScore)
-			return "color8";
-		else if (match.homeTeamScore < match.awayTeamScore)
-			return "color9";
-		else
+
+		var homeTeam = this.getEnum('teams', match.homeTeamId).name;
+		var awayTeam = this.getEnum('teams', match.awayTeamId).name;
+
+		if (match.homeTeamScore == match.awayTeamScore)
 			return "color0";
+		else if ((homeTeam.startsWith('4Fun') && match.homeTeamScore > match.awayTeamScore) || 
+			(awayTeam.startsWith('4Fun') && match.homeTeamScore < match.awayTeamScore))
+			return "color8";
+		else
+			return "color9";
 	}
 }

@@ -1,5 +1,5 @@
 #content {
-  width: 720px;
+  width: 960px;
   overflow-x: auto;
   margin: auto;
 }
@@ -61,5 +61,25 @@ h2 {
 }
 
 .top-matches div a:hover {
+  color: var(--hilighted-font-color);
+}
+
+ul.tags li {
+  list-style-type: none;
+  padding: 4px;
+  display: inline-block;
+  text-align: center;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--selected-bg-color);
+  vertical-align: middle;
+  margin: 4px;
+  color: var(--primary-font-color);
+  background-color: var(--element-bg-color);
+  cursor: pointer;
+}
+
+ul.tags li:hover {
+  border-color: var(--hilighted-font-color);
   color: var(--hilighted-font-color);
 }

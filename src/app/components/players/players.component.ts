@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { PlayerStats } from '../../models/playerStats';
+import { PlayerStats } from '../../models/stats';
 import { BaseComponent } from '../base/base.component';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Match } from '../../models/match';
 import { ApiService } from '../../services/api.service';
-import { TeamStats } from '../../models/teamStats';
+import { TeamStats } from '../../models/stats';
 import { BaseComponent } from '../base/base.component';
 
 @Component({

@@ -8,12 +8,13 @@
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
 	</section>
 
-	<h1 *ngIf="!editable && enumsLoaded">
+	<h1 *ngIf="!editable && enumsLoaded && id != 0">
 		<div class="detail-header">
 			<div class="center">{{ playerForm.get('name').value }} #{{ playerForm.get('number').value }}</div>
 		</div>
 		<div class="detail-tags">
-			<div>{{ getPlayerAge(playerForm.get('dateOfBirth').value) }} years old</div>
+			<div *ngIf="playerForm.get('dateOfBirth').value != null">
+				{{ getPlayerAge(playerForm.get('dateOfBirth').value) }} years old</div>
 			<div>{{ getEnum('playerPositions', playerForm.get('playerPositionId').value).name }}</div>
 			<div>{{ getEnum('teams', playerForm.get('teamId').value).name }}</div>
 			<div *ngIf="playerForm.get('retired').value">Retired</div>
@@ -57,17 +58,28 @@
 		</section>
 	</div>
 
-	<div *ngIf="!editable && stats != null && playerMatches != null && enumsLoaded">
-		<h2>Scoring</h2>
+	<div *ngIf="!editable && enumsLoaded">
+		<section>
+			TODO zobrazit len sezony v ktorych hrac hral
+		</section>
+		<ul class="tags">
+			<li *ngFor="let i of seasons" (click)="getSeasonStats(i.id);">{{ i.name }}</li>
+		</ul>
+	</div>
+
+	<div *ngIf="!editable && enumsLoaded && stats.length > 0 && playerMatches.length > 0">
+		<h2>Hilights</h2>
 		<div class="top-matches">
 			<div *ngFor="let m of bestScores">
-				<a href="/match/{{ m.matchId }}">{{ m.score }} {{ m.scoreType }} vs {{ getEnum('teams', m.opponentTeamId).name }}</a>
+				<a href="/match/{{ m.matchId }}">{{ m.score }} {{ m.scoreType }} vs
+					{{ getEnum('teams', m.opponentTeamId).name }}</a>
 			</div>
 		</div>
+		<h2>Scoring</h2>
 		<app-scoring-timeline [matches]="playerMatches" [stats]="stats"></app-scoring-timeline>
 	</div>
 
-	<div *ngIf="playerMatches != null && !editable">
+	<div *ngIf="!editable && playerMatches.length > 0">
 		<h2>Matches</h2>
 		<app-match-list [matches]="playerMatches"></app-match-list>
 	</div>

@@ -4,7 +4,7 @@ import { Label } from 'ng2-charts';
 import { Match } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { ApiService } from '../../services/api.service';
-import { PlayerMatchStats } from '../../models/playerMatchStats';
+import { PlayerMatchStats } from '../../models/stats';
 
 @Component({
 	selector: 'app-scoring-timeline',
@@ -80,11 +80,12 @@ export class ScoringTimelineComponent extends BaseComponent {
 			data: [], label: ' +/- Points', stack: 'a'
 		};
 
-		if (this.matches.length > 10)
+		//if (this.matches.length > 10)
 			this.barChartOptions = this.tooMuchDataOptions;
 
 		this.matches.forEach(m => {
-			this.barChartLabels.push(m.dateTime.toLocaleDateString('sk-SK')/*toISOString().slice(0, 10)*/);
+			let label = `${ m.dateTime.toLocaleDateString('sk-SK') }: ${ this.getEnum('teams', m.awayTeamId).name } vs ${ this.getEnum('teams', m.homeTeamId).name }`;
+			this.barChartLabels.push(label);
 		});
 
 		// goals

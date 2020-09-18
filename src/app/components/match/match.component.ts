@@ -3,10 +3,8 @@ import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Valida
 import { Match } from '../../models/match';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayerMatchStats } from '../../models/playerMatchStats';
-import { TeamStats } from '../../models/teamStats';
+import { PlayerMatchStats, TeamStats, PlayerStats } from '../../models/stats';
 import { BaseComponent } from '../base/base.component';
-import { PlayerStats } from '../../models/playerStats';
 
 @Component({
 	selector: 'app-match',

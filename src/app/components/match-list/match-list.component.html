@@ -19,9 +19,9 @@
 
 <div *ngIf="matches != null && matches.length > 1">
 	<div class="timeline-row" [ngClass]="{
-			'tl-normal' : matches.length < 21, 
-			'tl-tight' : matches.length > 20, 
-			'hide-text': matches.length > 20 }">
+			'tl-normal' : matches.length < 31, 
+			'tl-tight' : matches.length > 30, 
+			'hide-text': matches.length > 30 }">
 		<div *ngFor="let match of matches">
 			<a href="/match/{{ match.id }}"
 				class="{{ getMatchColor(match) }}">{{ match.homeTeamScore }}:{{ match.awayTeamScore }}</a>
@@ -33,7 +33,7 @@
 	<div class="matches-header">
 		<div class="left" (click)="sort('dateTime')">Date time</div>
 		<div class="left not-important" (click)="sort('place')">Place</div>
-		<div class="left not-important" (click)="sort('matchType')">Match type</div>
+		<!-- <div class="left not-important" (click)="sort('matchType')">Match type</div> -->
 		<div class="left not-important" (click)="sort('competition')">Competition</div>
 		<div class="right" (click)="sort('homeTeam')">Home team</div>
 		<div (click)="sort('homeTeamScore')">&#160;</div>
@@ -44,7 +44,7 @@
 	<a class="matches-row" *ngFor="let match of matches" href="/match/{{ match.id }}">
 		<div class="left">{{ match.dateTime | date:'dd. M. yyyy H:mm' }}</div>
 		<div class="left not-important">{{ getEnum('places', match.placeId).name }}</div>
-		<div class="left not-important">{{ getEnum('matchTypes', match.matchTypeId).name }}</div>
+		<!-- <div class="left not-important">{{ getEnum('matchTypes', match.matchTypeId).name }}</div> -->
 		<div class="left not-important">{{ getEnum('competitions', match.competitionId).name }}</div>
 		<div class="right" [class.winner]="match.homeTeamScore > match.awayTeamScore">
 			{{ getEnum('teams', match.homeTeamId).name }}</div>
