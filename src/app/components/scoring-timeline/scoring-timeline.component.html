@@ -1,10 +1,27 @@
-<section>
-	TODO clickable colums (/match/id)
-</section>
-<div>
-	<div style="height: 256px;">
-		<canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
-			[legend]="barChartLegend" [chartType]="barChartType">
-		</canvas>
+<div style="display:table;width:100%;">
+
+	<div style="display:table-cell;width:30%;">
+		<div style="height:256px;">
+			<canvas baseChart 
+				[datasets]="radarChartData"
+				[labels]="radarChartLabels"
+				[options]="radarChartOptions"
+				[chartType]="radarChartType">
+			</canvas>
+		</div>
 	</div>
+
+	<div style="display:table-cell;">
+		<div style="height:256px;">
+			<canvas baseChart 
+				[datasets]="barChartData"
+			 	[labels]="barChartLabels"
+				[options]="barChartOptions"
+				[legend]="barChartLegend"
+				[chartType]="barChartType"
+				(chartClick)="matchClicked($event)">
+			</canvas>
+		</div>
+	</div>
+
 </div>

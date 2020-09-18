@@ -7,6 +7,7 @@ import { Match } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { PlayerMatchStats } from '../../models/stats';
 import { BestScore } from '../../models/bestScore';
+import { Enum } from 'src/app/models/enum';
 
 @Component({
 	selector: 'app-player',
@@ -20,6 +21,7 @@ export class PlayerComponent extends BaseComponent {
 	playerMatches: Match[] = [];
 	stats: PlayerMatchStats[] = [];
 	bestScores: BestScore[] = [];
+	playerSeasons: Enum[] = [];
 
 	seasonId: number;
 
@@ -52,6 +54,10 @@ export class PlayerComponent extends BaseComponent {
 		});
 
 		this.enableForm(false);
+
+		route.params.subscribe(val => {
+			this.ngOnInit();
+		});
 	}
 
 	ngOnInit(): void {
@@ -66,28 +72,37 @@ export class PlayerComponent extends BaseComponent {
 			return;
 		}
 
-		// get match from api
-		this.apiService.getPlayer(id).subscribe(player => {
-			if (player != null) {
-				this.playerForm.patchValue({
-					id: player.id,
-					name: player.name,
-					dateOfBirth: player.dateOfBirth != null ? player.dateOfBirth.toISOString().slice(0, 10) : null,
-					number: player.number,
-					teamId: player.teamId,
-					playerPositionId: player.playerPositionId,
-					retired: player.retired,
-				});
-				this.id = player.id;
+		this.apiService.getPlayer(id).subscribe(player => this.loadPlayer(player));
+	}
 
-				if (this.seasonId == 0)
-					this.seasonId = this.seasons[0].id;
+	private loadPlayer(player: Player) {
+		if (player != null && player.id != null) {
+			this.playerForm.patchValue({
+				id: player.id,
+				name: player.name,
+				dateOfBirth: player.dateOfBirth == null ? null : player.dateOfBirth.toISOString().slice(0, 10),
+				number: player.number,
+				teamId: player.teamId,
+				playerPositionId: player.playerPositionId,
+				retired: player.retired,
+			});
+			this.id = player.id;
 
-				this.getSeasonStats(this.seasonId);
-			}
-			else
-				this.enableForm(true);
-		});
+			this.listPlayerSeasons();
+		}
+		else
+			this.router.navigate(['../players']);
+	}
+
+	listPlayerSeasons() {
+		this.apiService.listPlayerSeasons(this.id)
+			.subscribe(seasons => {
+				this.playerSeasons = seasons;
+				if (seasons.length > 0) {
+					this.seasonId = seasons[0].id;
+					this.getSeasonStats(this.seasonId);
+				}
+			});
 	}
 
 	getSeasonStats(seasonId: number) {
@@ -113,9 +128,9 @@ export class PlayerComponent extends BaseComponent {
 						if (mostGoals != null && mostGoals.goals > 0) {
 							this.bestScores.push({
 								score: mostGoals.goals,
-								scoreType: 'goals',
+								scoreType: this.getStringMutation(mostGoals.goals, 'gól', 'góly', 'gólov'),
 								matchId: mostGoals.matchId,
-								opponentTeamId: this.GetOpponentTeamId(mostGoals.matchId),
+								opponentTeamId: this.getOpponentTeamId(mostGoals.matchId),
 							});
 						}
 
@@ -125,9 +140,9 @@ export class PlayerComponent extends BaseComponent {
 						if (mostAssists != null && mostAssists.assists > 0) {
 							this.bestScores.push({
 								score: mostAssists.assists,
-								scoreType: 'assists',
+								scoreType: this.getStringMutation(mostAssists.assists, 'asistencia', 'asistencie', 'asistencií'),
 								matchId: mostAssists.matchId,
-								opponentTeamId: this.GetOpponentTeamId(mostAssists.matchId),
+								opponentTeamId: this.getOpponentTeamId(mostAssists.matchId),
 							});
 						}
 
@@ -137,9 +152,9 @@ export class PlayerComponent extends BaseComponent {
 						if (mostPoints != null && mostPoints.posNegPoints > 0) {
 							this.bestScores.push({
 								score: mostPoints.posNegPoints,
-								scoreType: '+/- points',
+								scoreType: '+/- ' + this.getStringMutation(mostPoints.posNegPoints, 'bod', 'body', 'bodov'),
 								matchId: mostPoints.matchId,
-								opponentTeamId: this.GetOpponentTeamId(mostPoints.matchId),
+								opponentTeamId: this.getOpponentTeamId(mostPoints.matchId),
 							});
 						}
 					});
@@ -155,15 +170,21 @@ export class PlayerComponent extends BaseComponent {
 			id: this.playerForm.get('id').value,
 			name: this.playerForm.get('name').value,
 			dateOfBirth: this.playerForm.get('dateOfBirth').value,
-			number: this.playerForm.get('number').value,
+			number: this.playerForm.get('number').value == "" ? null : this.playerForm.get('number').value,
 			teamId: this.playerForm.get('teamId').value,
 			playerPositionId: this.playerForm.get('playerPositionId').value,
 			retired: this.playerForm.get('retired').value,
 		};
 
-		var savedPlayer = this.apiService.savePlayer(player);
-		if (savedPlayer != null)
-			this.router.navigate(['../player/' + savedPlayer.id]);
+		this.apiService.savePlayer(player).subscribe(
+			player => {
+				this.enableForm(false);
+				if (this.id == 0)
+					this.router.navigate(['./player/' + player.id]);
+				else
+					this.loadPlayer(player);
+			}
+		);
 	}
 
 	enableForm(enable: boolean) {
@@ -181,12 +202,15 @@ export class PlayerComponent extends BaseComponent {
 	}
 
 	deletePlayer() {
-		if (this.apiService.deletePlayer(this.playerForm.get('id').value))
-			this.router.navigate(['../players']);
+		if (confirm(`Delete '${this.playerForm.get('name').value}' ?`)) {
+			this.apiService.deletePlayer(this.playerForm.get('id').value)
+				.subscribe(result => this.router.navigate(['../players']));
+		}
 	}
 
 	undoChanges() {
-		this.router.navigate(['../player/' + this.id]);
+		this.enableForm(false);
+		this.getPlayerFromUrl();
 	}
 
 	getPlayerAge(dateOfBirth: Date): number {
@@ -202,7 +226,7 @@ export class PlayerComponent extends BaseComponent {
 		return control.invalid && (control.dirty || control.touched || this.editable);
 	}
 
-	GetOpponentTeamId(matchId: number): number {
+	getOpponentTeamId(matchId: number): number {
 		var match = this.playerMatches.find(m => m.id == matchId);
 		if (this.getEnum('teams', match.homeTeamId).name.startsWith('4Fun'))
 			return match.awayTeamId;

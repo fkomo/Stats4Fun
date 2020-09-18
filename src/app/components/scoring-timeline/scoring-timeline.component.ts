@@ -1,10 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
+import { ChartOptions, ChartType, ChartDataSets, RadialChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { Match } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { ApiService } from '../../services/api.service';
 import { PlayerMatchStats } from '../../models/stats';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-scoring-timeline',
@@ -20,20 +21,8 @@ export class ScoringTimelineComponent extends BaseComponent {
 		maintainAspectRatio: false,
 		responsive: true,
 		scales: {
-			yAxes: [{
-				ticks: {
-					stepSize: 1
-				}
-			}]
-		},
-	};
-
-	// if there are too many matches - hide x labels, ...
-	private tooMuchDataOptions: ChartOptions = {
-		maintainAspectRatio: false,
-		responsive: true,
-		scales: {
 			xAxes: [{
+				display: false,
 				ticks: {
 					display: false,
 				}
@@ -45,14 +34,52 @@ export class ScoringTimelineComponent extends BaseComponent {
 			}]
 		},
 	};
-
 	public barChartLabels: Label[] = [];
 	public barChartData: ChartDataSets[] = [];
+
+	public radarChartOptions: RadialChartOptions = {
+		maintainAspectRatio: false,
+		responsive: true,
+		legend: {
+			display: false,
+		},
+		scales: {
+			xAxes: [{
+				display: false,
+				ticks: {
+					display: false,
+				}
+			}],
+			yAxes: [{
+				display: false,
+				ticks: {
+					stepSize: 1,
+				}
+			}],
+
+		},
+		scale: {
+			ticks: {
+				display: false,
+				maxTicksLimit: 10,
+			}
+		},
+	};
+	public radarChartLabels: Label[] = [
+		'Góly',
+		'Asistencie',
+		'+/- Body',
+		'Žlté Karty',
+		'Červené karty'
+	];
+	public radarChartData: ChartDataSets[] = [];
+	public radarChartType: ChartType = 'radar';
 
 	@Input() stats: PlayerMatchStats[];
 	@Input() matches: Match[];
 
 	constructor(
+		private router: Router,
 		protected apiService: ApiService) {
 		super(apiService);
 	}
@@ -63,6 +90,19 @@ export class ScoringTimelineComponent extends BaseComponent {
 		this.createChartData();
 	}
 
+	matchClicked(e: any) {
+
+		if (e.active.length > 0) {
+			const chart = e.active[0]._chart;
+			const activePoints = chart.getElementAtEvent(e.event);
+			if (activePoints.length > 0) {
+				const clickedElementIndex = activePoints[0]._index;
+			
+				this.router.navigate([`../match/${ this.matches[clickedElementIndex].id }`]);
+			}
+		}
+	}
+
 	createChartData() {
 
 		this.barChartLabels = [];
@@ -71,20 +111,17 @@ export class ScoringTimelineComponent extends BaseComponent {
 			return;
 
 		var goals: ChartDataSets = {
-			data: [], label: ' Goals', stack: 'a'
+			data: [], label: ' Góly', stack: 'a'
 		};
 		var assists: ChartDataSets = {
-			data: [], label: ' Assists', stack: 'a'
+			data: [], label: ' Asistencie', stack: 'a'
 		};
 		var points: ChartDataSets = {
-			data: [], label: ' +/- Points', stack: 'a'
+			data: [], label: ' +/- Body', stack: 'a'
 		};
 
-		//if (this.matches.length > 10)
-			this.barChartOptions = this.tooMuchDataOptions;
-
 		this.matches.forEach(m => {
-			let label = `${ m.dateTime.toLocaleDateString('sk-SK') }: ${ this.getEnum('teams', m.awayTeamId).name } vs ${ this.getEnum('teams', m.homeTeamId).name }`;
+			let label = `${m.dateTime.toLocaleDateString('sk-SK')}: ${this.getEnum('teams', m.awayTeamId).name} vs ${this.getEnum('teams', m.homeTeamId).name}`;
 			this.barChartLabels.push(label);
 		});
 
@@ -106,5 +143,15 @@ export class ScoringTimelineComponent extends BaseComponent {
 		this.barChartData.push(goals);
 		this.barChartData.push(assists);
 		this.barChartData.push(points);
+
+		this.radarChartData = [{
+			data: [
+				this.stats.reduce(function (sum, b) { return sum + b.goals; }, 0),
+				this.stats.reduce(function (sum, b) { return sum + b.assists; }, 0),
+				this.stats.reduce(function (sum, b) { return sum + b.posNegPoints; }, 0),
+				this.stats.reduce(function (sum, b) { return sum + b.yellowCards; }, 0),
+				this.stats.reduce(function (sum, b) { return sum + b.redCards; }, 0),
+			],
+		}];
 	}
 }

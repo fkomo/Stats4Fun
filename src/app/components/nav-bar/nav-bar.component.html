@@ -1,19 +1,19 @@
 <div id="menu-bar">
 	<div>
 		<a class="color1" routerLink="/players" (click)="tabChanged('players')"
-			[class.selected]="currentTab === 'players'">Players</a>
+			[class.selected]="currentTab === 'players'">Hráčske Štatistiky</a>
 	</div>
 	<div>
 		<a class="color2" routerLink="/matches" (click)="tabChanged('matches')"
-			[class.selected]="currentTab === 'matches'">Matches</a>
+			[class.selected]="currentTab === 'matches'">Zápasy</a>
 	</div>
 	<div>
 		<a class="color3" routerLink="/match" (click)="tabChanged('new-match')"
-			[class.selected]="currentTab === 'new-match'">New Match</a>
+			[class.selected]="currentTab === 'new-match'">Nový Zápas</a>
 	</div>
 	<div>
 		<a class="color4" routerLink="/player" (click)="tabChanged('new-player')"
-			[class.selected]="currentTab === 'new-player'">New Player</a>
+			[class.selected]="currentTab === 'new-player'">Nový Hráč</a>
 	</div>
 	<div>
 		<a class="color5" routerLink="/enums" (click)="tabChanged('enums')"

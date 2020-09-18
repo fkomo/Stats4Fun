@@ -1,7 +1,7 @@
 <div id="content">
 	<div class="players-header">
 		<div [class.hilighted]="selectedColumn=='number'" class="not-important" (click)="sort('number')">#</div>
-		<div [class.hilighted]="selectedColumn=='name'" class="left" (click)="sort('name')">Name</div>
+		<div [class.hilighted]="selectedColumn=='name'" class="left" (click)="sort('name')">Meno</div>
 		<div [class.hilighted]="selectedColumn=='playerPosition'" class="left not-important"
 			(click)="sort('playerPosition')">Post</div>
 		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='gamesPlayed'" (click)="sort('gamesPlayed')">GP</div>

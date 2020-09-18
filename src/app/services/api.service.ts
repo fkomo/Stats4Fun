@@ -153,7 +153,7 @@ export class ApiService {
 				map((data: any) => this.enumAdapter.adapt(item))
 			);
 		}
-		// modify
+		// update
 		else {
 			// put: /enums/*/:id
 			return this.http.put(`${this.baseUrl}/enums/${enumName}/${item.id}`, { name: item.name, id: item.id }).pipe(
@@ -180,28 +180,65 @@ export class ApiService {
 			);
 	}
 
+	listPlayerSeasons(playerId: number): Observable<Enum[]> {
+		this.log.add(`listPlayerSeasons(${playerId})`);
+
+		// get: /enums/seasons/player/:id
+		return this.http.get(`${this.baseUrl}/enums/seasons/player/${playerId}`).pipe(
+			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
+		);
+	}
+
 	getPlayer(id: number): Observable<Player> {
 		this.log.add(`getPlayer(${id})`);
 
 		// get: /players/:id
-		return this.http.get(`${this.baseUrl}/players/${id}`).pipe(
+		return this.http.get(`${this.baseUrl}/player/${id}`).pipe(
 			map((data: any) => this.playerAdapter.adapt(data))
 		);
 	}
 
-	savePlayer(player: Player): Player {
+	savePlayer(player: Player): Observable<Player> {
 		this.log.add(player);
 
-		// post: /player
-		// put: /player/:id
-		return player;
+		// insert
+		if (player.id == 0) {
+			// post: /player
+			return this.http.post(`${this.baseUrl}/player`,
+				{
+					name: player.name,
+					dateOfBirth: player.dateOfBirth,
+					number: player.number,
+					playerPositionId: player.playerPositionId,
+					teamId: player.teamId,
+					retired: player.retired,
+				}).pipe(
+					map((data: any) => this.playerAdapter.adapt(data))
+				);
+		}
+		// update
+		else {
+			// put: /player/:id
+			return this.http.put(`${this.baseUrl}/player/${player.id}`,
+				{
+					id: player.id,
+					name: player.name,
+					dateOfBirth: player.dateOfBirth,
+					number: player.number,
+					playerPositionId: player.playerPositionId,
+					teamId: player.teamId,
+					retired: player.retired,
+				}).pipe(
+					map((data: any) => this.playerAdapter.adapt(data))
+				);
+		}
 	}
 
-	deletePlayer(id: number): boolean {
+	deletePlayer(id: number): Observable<any> {
 		this.log.add(`deletePlayer(${id})`);
 
-		// delete: /player/:id
-		return true;
+		// delete: /player
+		return this.http.delete(`${this.baseUrl}/player/${id}`);
 	}
 
 	listPlayerMatches(id: number, seasonId: number): Observable<Match[]> {

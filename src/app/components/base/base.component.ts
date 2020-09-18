@@ -77,9 +77,9 @@ export class BaseComponent implements OnInit {
 			case 'teams':
 				return this.teams.find(i => i.id == id);
 
-			case 'playerPositions': {
+			case 'playerPositions':
 				return this.playerPositions.find(i => i.id == id);
-			}
+			
 			case 'seasons':
 				return this.seasons.find(i => i.id == id);
 
@@ -121,5 +121,13 @@ export class BaseComponent implements OnInit {
 	setStorage(key: string, value: any): any {
 		sessionStorage.setItem(key, JSON.stringify(value));
 		return value;
+	}
+
+	public getStringMutation(value: number, one: string, two2Five: string, more: string): string {
+		if (value == 1)
+			return one;
+		if (value > 1 && value < 5)
+			return two2Five;
+		return more;
 	}
 }

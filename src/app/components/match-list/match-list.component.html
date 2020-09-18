@@ -31,15 +31,15 @@
 
 <div class="content">
 	<div class="matches-header">
-		<div class="left" (click)="sort('dateTime')">Date time</div>
-		<div class="left not-important" (click)="sort('place')">Place</div>
+		<div class="left" (click)="sort('dateTime')">Dátum a čas</div>
+		<div class="left not-important" (click)="sort('place')">Miesto</div>
 		<!-- <div class="left not-important" (click)="sort('matchType')">Match type</div> -->
-		<div class="left not-important" (click)="sort('competition')">Competition</div>
-		<div class="right" (click)="sort('homeTeam')">Home team</div>
+		<div class="left not-important" (click)="sort('competition')">Súťaž</div>
+		<div class="right" (click)="sort('homeTeam')">Domáci</div>
 		<div (click)="sort('homeTeamScore')">&#160;</div>
 		<div>&#160;</div>
 		<div (click)="sort('awayTeamScore')">&#160;</div>
-		<div class="left" (click)="sort('awayTeam')">Away team</div>
+		<div class="left" (click)="sort('awayTeam')">Hostia</div>
 	</div>
 	<a class="matches-row" *ngFor="let match of matches" href="/match/{{ match.id }}">
 		<div class="left">{{ match.dateTime | date:'dd. M. yyyy H:mm' }}</div>
