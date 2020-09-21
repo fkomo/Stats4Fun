@@ -21,8 +21,6 @@
 					<option *ngFor="let place of places" [ngValue]="place.id">{{ place.name }}</option>
 				</select>
 			</label>
-		</section>
-		<section>
 			<label>Match type:
 				<select formControlName="matchTypeId" [ngClass]="{ 'invalid': isInvalid(formControls.matchTypeId) }">
 					<option value="0">?</option>
@@ -51,8 +49,6 @@
 					<option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }}</option>
 				</select>
 			</label>
-		</section>
-		<section>
 			<label>Skóre domáci:
 				<input style="width:128px" formControlName="homeTeamScore" placeholder="Skóre domáci ..."
 					[ngClass]="{ 'invalid': isInvalid(formControls.homeTeamScore) }" />
@@ -71,7 +67,7 @@
 			<br />
 			TODO rozjebany Remove button
 		</section>
-	
+
 		<section>
 			<label style="width:200px">Player</label>
 			<label style="width:80px">Goals</label>
@@ -85,7 +81,7 @@
 				<label>
 					<select style="width:184px" formControlName="playerId">
 						<option value="0">?</option>
-						<option *ngFor="let player of playerNames" [ngValue]="player.id">{{ player.name }}</option>
+						<option *ngFor="let player of orderedPlayerNames" [ngValue]="player.id">{{ player.name }}</option>
 					</select>
 				</label>
 				<label>

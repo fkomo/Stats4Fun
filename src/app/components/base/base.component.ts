@@ -21,6 +21,8 @@ export class BaseComponent implements OnInit {
 	playerPositions: Enum[];
 	enumsLoaded: boolean = false;
 
+	orderedPlayerNames: Enum[];
+
 	protected comboBoxValidator = [
 		Validators.min(1),
 		Validators.required];
@@ -56,6 +58,10 @@ export class BaseComponent implements OnInit {
 				this.enumsLoaded = this.setStorage('enumsLoaded', true);
 			});
 		}
+
+		this.orderedPlayerNames = this.playerNames.sort((i1, i2) => {
+			return i1.name.localeCompare(i2.name);
+		});
 	}
 
 	public getEnum(enumName: string, id: number): Enum {

@@ -19,11 +19,6 @@
 				<input type="date" formControlName="dateOfBirth"
 					[ngClass]="{ 'invalid': isInvalid(formControls.dateOfBirth) }" />
 			</label>
-			<label>Číslo na drese:
-				<input style="width:128px" formControlName="number" placeholder="?" />
-			</label>
-		</section>
-		<section>
 			<label>Tím:
 				<select formControlName="teamId" [ngClass]="{ 'invalid': isInvalid(formControls.teamId) }">
 					<option value="0">?</option>
@@ -37,8 +32,9 @@
 					<option *ngFor="let item of playerPositions" [ngValue]="item.id">{{ item.name }}</option>
 				</select>
 			</label>
-		</section>
-		<section>
+			<label>Číslo na drese:
+				<input style="width:128px" formControlName="number" placeholder="?" />
+			</label>
 			<label>Neaktívny hráč:
 				<input formControlName="retired" type="checkbox" class="check" />
 			</label>
