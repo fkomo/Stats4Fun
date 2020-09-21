@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Match } from '../../models/match';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { Label } from 'ng2-charts';
+import { reduce } from 'rxjs/operators';
+import { Match, Matches } from '../../models/match';
 import { ApiService } from '../../services/api.service';
 import { BaseComponent } from '../base/base.component';
-import { TeamStats } from '../../models/stats';
 
 @Component({
 	selector: 'app-match-list',
@@ -12,14 +14,62 @@ import { TeamStats } from '../../models/stats';
 
 export class MatchListComponent extends BaseComponent {
 
-	@Input() matches: Match[];
-	@Input() teamStats: TeamStats;
+	@Input() matches: Matches;
 
 	goalsForPercentage: number;
 	goalsAgainstPercentage: number;
 
 	columns = {};
 	selectedColumn: string;
+
+	public goalsChartType: ChartType = 'doughnut';
+	public goalsChartLegend = true;
+	public goalsChartOptions: ChartOptions = {
+		maintainAspectRatio: false,
+		responsive: true,
+		scales: {
+			xAxes: [{
+				display: false,
+			}],
+			yAxes: [{
+				display: false,
+			}]
+		},
+		legend: {
+			display: true,
+			position: "bottom",
+			align: "center",
+		},
+		rotation: 1 * Math.PI,
+		circumference: 1 * Math.PI
+	};
+	public goalsChartLabels: Label[] = [' Strelené góly', ' Inkasované góly'];
+	public goalsChartData: ChartDataSets[] = [];
+
+	public resultsChartType: ChartType = 'doughnut';
+	public resultsChartLegend = true;
+	public resultsChartOptions: ChartOptions = {
+		maintainAspectRatio: false,
+		responsive: true,
+		scales: {
+			xAxes: [{
+				display: false,
+			}],
+			yAxes: [{
+				display: false,
+			}]
+		},
+		legend: {
+			display: true,
+			position: "bottom",
+			align: "center",
+		},
+		rotation: 1 * Math.PI,
+		circumference: 1 * Math.PI
+	};
+	public resultsChartLabels: Label[] = [' Výhry', ' Remízy', ' Prehry'];
+	public resultsChartData: ChartDataSets[] = [];
+
 
 	constructor(
 		protected apiService: ApiService) {
@@ -29,13 +79,43 @@ export class MatchListComponent extends BaseComponent {
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		if (this.teamStats != null) {
-			this.goalsForPercentage = 50.0 * this.teamStats.goalsFor / (this.teamStats.goalsFor + this.teamStats.goalsAgainst);
-			this.goalsAgainstPercentage = 50.0 * this.teamStats.goalsAgainst / (this.teamStats.goalsFor + this.teamStats.goalsAgainst);
+		if (this.matches != null) {
+			this.createChartData();
+
+			this.goalsForPercentage = 50.0 * this.matches.goalsFor / (this.matches.goalsFor + this.matches.goalsAgainst);
+			this.goalsAgainstPercentage = 50.0 * this.matches.goalsAgainst / (this.matches.goalsFor + this.matches.goalsAgainst);
 		}
 
 		this.selectedColumn = 'dateTime';
 		this.sort(this.selectedColumn);
+	}
+
+	createChartData() {
+		this.goalsChartData = [];
+
+		if (this.matches == null)
+			return;
+
+		this.goalsChartData = [{
+			data: [
+				this.matches.goalsFor,
+				this.matches.goalsAgainst
+			],
+			borderColor: '#1e1e1e',
+			borderWidth: 4,
+		}];
+
+		this.resultsChartData = [{
+			data: [
+				this.matches.wins,
+				this.matches.ties,
+				this.matches.losses,
+			],
+			backgroundColor: [ "#1fcb22b3", "#808080b3", "#e21f1fb3"],
+			
+			borderColor: '#1e1e1e',
+			borderWidth: 4,
+		}];
 	}
 
 	sort(columnName: string) {
@@ -51,7 +131,7 @@ export class MatchListComponent extends BaseComponent {
 		else
 			this.columns[columnName] = !old;
 
-		this.matches = this.matches.sort((i1, i2) => {
+		this.matches.matches = this.matches.matches.sort((i1, i2) => {
 			var order = this.columns[columnName] ? -1 : 1;
 			switch (columnName) {
 				case "dateTime":
@@ -83,7 +163,7 @@ export class MatchListComponent extends BaseComponent {
 
 		if (match.homeTeamScore == match.awayTeamScore)
 			return "color0";
-		else if ((homeTeam.startsWith('4Fun') && match.homeTeamScore > match.awayTeamScore) || 
+		else if ((homeTeam.startsWith('4Fun') && match.homeTeamScore > match.awayTeamScore) ||
 			(awayTeam.startsWith('4Fun') && match.homeTeamScore < match.awayTeamScore))
 			return "color8";
 		else

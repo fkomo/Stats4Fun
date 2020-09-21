@@ -114,6 +114,10 @@
   border-width: 1px;
 }
 
+.tl-super-tight div {
+  border-width: 0px;
+}
+
 .hide-text div a {
   font-size: 0;
 }
@@ -123,6 +127,10 @@
   border-width: 1px;
   border-style: solid;
   color: var(--secondary-font-color);
+}
+
+.tl-super-tight div a {
+  border-width: 0px;
 }
 
 .timeline-row div:hover {

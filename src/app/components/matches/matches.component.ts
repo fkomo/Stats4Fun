@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Match } from '../../models/match';
+import { Match, Matches } from '../../models/match';
 import { ApiService } from '../../services/api.service';
-import { TeamStats } from '../../models/stats';
 import { BaseComponent } from '../base/base.component';
 
 @Component({
@@ -12,8 +11,7 @@ import { BaseComponent } from '../base/base.component';
 
 export class MatchesComponent extends BaseComponent {
 
-	matches: Match[];
-	teamStats: TeamStats;
+	matches: Matches;
 
 	// filters
 	seasonId: number;
@@ -58,14 +56,5 @@ export class MatchesComponent extends BaseComponent {
 			this.matchResultId,
 			this.competitionId)
 			.subscribe(i => this.matches = i);
-
-		this.apiService.getTeamStats(
-			this.seasonId,
-			this.teamId,
-			this.matchTypeId,
-			this.placeId,
-			this.matchResultId,
-			this.competitionId)
-			.subscribe(i => this.teamStats = i);;
 	}
 }

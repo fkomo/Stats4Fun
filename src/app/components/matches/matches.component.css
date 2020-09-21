@@ -1,5 +1,22 @@
 #content {
-  width: 720px;
+  width: 960px;
   overflow-x: auto;
   margin: auto;
+}
+
+.team-stats {
+  width: 100%;
+  display: table;
+  line-height: 32px;
+  margin-bottom: 16px;
+}
+
+.team-stats div {
+  text-align: center;
+  display: table-cell;
+  border-left: 16px solid var(--primary-bg-color);
+  border-right: 16px solid var(--primary-bg-color);
+  padding-left: 8px;
+  padding-right: 8px;
+  color: var(--secondary-font-color);
 }

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ChartOptions, ChartType, ChartDataSets, RadialChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
-import { Match } from '../../models/match';
+import { Match, Matches } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { ApiService } from '../../services/api.service';
-import { PlayerMatchStats } from '../../models/stats';
+import { PlayerStats } from '../../models/playerStats';
 import { Router } from '@angular/router';
 
 @Component({
@@ -75,8 +75,8 @@ export class ScoringTimelineComponent extends BaseComponent {
 	public radarChartData: ChartDataSets[] = [];
 	public radarChartType: ChartType = 'radar';
 
-	@Input() stats: PlayerMatchStats[];
-	@Input() matches: Match[];
+	@Input() stats: PlayerStats[];
+	@Input() matches: Matches;
 
 	constructor(
 		private router: Router,
@@ -98,7 +98,7 @@ export class ScoringTimelineComponent extends BaseComponent {
 			if (activePoints.length > 0) {
 				const clickedElementIndex = activePoints[0]._index;
 			
-				this.router.navigate([`../match/${ this.matches[clickedElementIndex].id }`]);
+				this.router.navigate([`../match/${ this.matches.matches[clickedElementIndex].id }`]);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ export class ScoringTimelineComponent extends BaseComponent {
 
 		this.barChartLabels = [];
 		this.barChartData = [];
-		if (this.matches.length < 1 || this.stats.length < 1)
+		if (this.matches.gamesPlayed < 1 || this.stats.length < 1)
 			return;
 
 		var goals: ChartDataSets = {
@@ -120,7 +120,7 @@ export class ScoringTimelineComponent extends BaseComponent {
 			data: [], label: ' +/- Body', stack: 'a'
 		};
 
-		this.matches.forEach(m => {
+		this.matches.matches.forEach(m => {
 			let label = `${m.dateTime.toLocaleDateString('sk-SK')}: ${this.getEnum('teams', m.awayTeamId).name} vs ${this.getEnum('teams', m.homeTeamId).name}`;
 			this.barChartLabels.push(label);
 		});

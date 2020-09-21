@@ -12,7 +12,7 @@
 }
 
 .color0 {
-  background-color: rgba(128, 128, 128, 0.7);
+  background-color: #808080b3;
   border-color: rgba(128, 128, 128, 0.9);
 }
 
@@ -52,18 +52,23 @@
 }
 
 .color8 {
-  background-color: rgba(31, 203, 34, 0.7);
+  background-color: #1fcb22b3;
   border-color: rgba(31, 203, 34, 0.9);
 }
 
 .color9 {
-  background-color: rgba(226, 31, 31, 0.7);
+  background-color: #e21f1fb3;
   border-color: rgba(226, 31, 31, 0.9);
 }
 
 .color10 {
   background-color: rgba(255, 216, 0, 0.7);
   border-color: rgba(255, 216, 0, 0.9);
+}
+
+.color99 {
+  background-color: var(--element-bg-color);
+  border-color: var(--selected-bg-color);
 }
 
 * {
@@ -88,7 +93,7 @@ body {
 }
 
 #filter-container {
-  width: 720px;
+  width: 960px;
   line-height: 32px;
   height: 32px;
   vertical-align: middle;

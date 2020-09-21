@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, FormArray, AbstractControl, Validators } from '@angular/forms';
-import { Match } from '../../models/match';
+import { Match, Matches } from '../../models/match';
 import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlayerMatchStats, TeamStats, PlayerStats } from '../../models/stats';
+import { PlayerStats } from '../../models/playerStats';
 import { BaseComponent } from '../base/base.component';
 
 @Component({
@@ -15,12 +15,14 @@ import { BaseComponent } from '../base/base.component';
 export class MatchComponent extends BaseComponent {
 
 	id: number;
-	matchPlayers: PlayerStats[];
-	mutualMatches: Match[];
-	mutualTeamStats: TeamStats;
+	match: Match;
+	matchPlayers: PlayerStats[] = [];
+	mutualMatches: Matches;
 
 	matchForm: FormGroup;
 	editable: boolean;
+
+	get formControls() { return this.matchForm.controls; }
 
 	constructor(
 		private route: ActivatedRoute,
@@ -29,13 +31,12 @@ export class MatchComponent extends BaseComponent {
 		private formBuilder: FormBuilder) {
 		super(apiService);
 
+		this.id = 0;
 		this.editable = false;
 
-		this.id = 0;
 		this.matchForm = this.formBuilder.group({
 			id: this.id,
-			dateTime: [new Date().toISOString().slice(0, 16),
-			Validators.required],
+			dateTime: [new Date().toISOString().slice(0, 16), Validators.required],
 			homeTeamScore: [0, Validators.required],
 			awayTeamScore: [0, Validators.required],
 			homeTeamId: [0, this.comboBoxValidator],
@@ -47,73 +48,18 @@ export class MatchComponent extends BaseComponent {
 		});
 
 		this.enableForm(false);
-	}
 
-	private createPlayerFormGroup(player: PlayerMatchStats): FormGroup {
-		return this.formBuilder.group({
-			id: player != null ? player.id : 0,
-			playerId: player != null ? player.playerId : [0, this.comboBoxValidator],
-			matchId: player != null ? player.matchId : 0,
-			goals: player != null ? player.goals : [0, Validators.required],
-			assists: player != null ? player.assists : [0, Validators.required],
-			posNegPoints: player != null ? player.posNegPoints : [0, Validators.required],
-			yellowCards: player != null ? player.yellowCards : [0, Validators.required],
-			redCards: player != null ? player.redCards : [0, Validators.required],
+		route.params.subscribe(val => {
+			this.ngOnInit();
 		});
-	}
-
-	private getMatchFromUrl(): Match {
-		const id = +this.route.snapshot.paramMap.get('id');
-		if (id == 0)
-			return null;
-
-		// get match from api
-		var match = this.apiService.getMatch(id);
-		this.matchPlayers = [];
-
-		if (match != null) {
-
-			// create form
-			this.matchForm.patchValue({
-				id: match.id,
-				dateTime: match.dateTime.toISOString().slice(0, 16),
-				homeTeamId: match.homeTeamId,
-				awayTeamId: match.awayTeamId,
-				homeTeamScore: match.homeTeamScore,
-				awayTeamScore: match.awayTeamScore,
-				placeId: match.placeId,
-				matchTypeId: match.matchTypeId,
-				competitionId: match.competitionId,
-			});
-			this.id = match.id;
-
-			match.players.forEach(p => {
-				var playersFormGroup = this.createPlayerFormGroup(p);
-				playersFormGroup.disable();
-				(this.matchForm.get('players') as FormArray).push(playersFormGroup);
-			});
-
-			this.apiService.listMatchPlayers(match.id)
-				.subscribe(i => this.matchPlayers = i);
-
-			this.apiService.listMutualMatches(match.homeTeamId, match.awayTeamId)
-				.subscribe(i => this.mutualMatches = i);
-			this.apiService.getMutualStats(match.homeTeamId, match.awayTeamId)
-				.subscribe(i => this.mutualTeamStats = i);
-		}
-
-		return match;
 	}
 
 	ngOnInit(): void {
 		super.ngOnInit();
-
-		if (!this.getMatchFromUrl())
-			this.enableForm(true);
+		this.getMatchFromUrl();
 	}
 
 	enableForm(enable: boolean) {
-
 		var playersForm = this.matchForm.get('players') as FormArray;
 		for (var i = 0; i < playersForm.length; i++) {
 			if (enable)
@@ -130,11 +76,81 @@ export class MatchComponent extends BaseComponent {
 		this.editable = enable;
 	}
 
+	isInvalid(control: AbstractControl): boolean {
+		return control.invalid && (control.dirty || control.touched || this.editable);
+	}
+
+	private getMatchFromUrl() {
+		const id = +this.route.snapshot.paramMap.get('id');
+		if (id == 0) {
+			this.enableForm(true);
+			return;
+		}
+
+		this.apiService.getMatch(id)
+			.subscribe(match => {
+				this.match = match;
+				this.loadMatch(this.match);
+			});
+	}
+
+	private loadMatch(match: Match) {
+		if (match != null && match.id != null) {
+			this.matchForm.patchValue({
+				id: match.id,
+				dateTime: match.dateTime.toISOString().slice(0, 16),
+				homeTeamId: match.homeTeamId,
+				awayTeamId: match.awayTeamId,
+				homeTeamScore: match.homeTeamScore,
+				awayTeamScore: match.awayTeamScore,
+				placeId: match.placeId,
+				matchTypeId: match.matchTypeId,
+				competitionId: match.competitionId,
+			});
+			this.id = match.id;
+
+			(this.matchForm.get('players') as FormArray).clear();
+			match.players.forEach(p => {
+				var playersFormGroup = this.createPlayerFormGroup(p);
+				playersFormGroup.disable();
+				(this.matchForm.get('players') as FormArray).push(playersFormGroup);
+			});
+
+			let opponentTeamId = this.getOpponentTeamId(match);
+			this.apiService.listMutualMatches(
+				opponentTeamId == match.homeTeamId ? match.awayTeamId : match.homeTeamId,
+				opponentTeamId)
+				.subscribe(i => this.mutualMatches = i);
+		}
+		else
+			this.router.navigate(['../matches']);
+	}
+
+	private getOpponentTeamId(match: Match): number {
+		if (this.getEnum('teams', match.homeTeamId).name.startsWith('4Fun'))
+			return match.awayTeamId;
+
+		return match.homeTeamId;
+	}
+
+	private createPlayerFormGroup(player: PlayerStats): FormGroup {
+		return this.formBuilder.group({
+			playerStatsId: player != null ? player.playerStatsId : 0,
+			playerId: player != null ? player.playerId : [0, this.comboBoxValidator],
+			matchId: player != null ? player.matchId : 0,
+			goals: player != null ? player.goals : [0, Validators.required],
+			assists: player != null ? player.assists : [0, Validators.required],
+			posNegPoints: player != null ? player.posNegPoints : [0, Validators.required],
+			yellowCards: player != null ? player.yellowCards : [0, Validators.required],
+			redCards: player != null ? player.redCards : [0, Validators.required],
+		});
+	}
+
 	saveMatch() {
 		if (!this.matchForm.valid)
 			return;
 
-		var match = {
+		var match: Match = {
 			id: this.matchForm.get('id').value,
 			dateTime: this.matchForm.get('dateTime').value,
 			homeTeamId: this.matchForm.get('homeTeamId').value,
@@ -145,7 +161,7 @@ export class MatchComponent extends BaseComponent {
 			matchTypeId: this.matchForm.get('matchTypeId').value,
 			competitionId: this.matchForm.get('competitionId').value,
 			players: []
-		} as Match;
+		};
 
 		var players = this.matchForm.get('players') as FormArray;
 		for (var i = 0; i < players.length; i++) {
@@ -154,7 +170,7 @@ export class MatchComponent extends BaseComponent {
 				continue;
 
 			match.players.push({
-				id: player.get('id').value,
+				playerStatsId: player.get('playerStatsId').value,
 				playerId: player.get('playerId').value,
 				matchId: this.matchForm.get('id').value,
 				goals: player.get('goals').value,
@@ -162,12 +178,19 @@ export class MatchComponent extends BaseComponent {
 				posNegPoints: player.get('posNegPoints').value,
 				yellowCards: player.get('yellowCards').value,
 				redCards: player.get('redCards').value,
-			} as PlayerMatchStats);
+			} as PlayerStats);
 		}
 
-		var savedMatch = this.apiService.saveMatch(match);
-		if (savedMatch != null)
-			this.router.navigate(['../match/' + savedMatch.id]);
+		this.apiService.saveMatch(match).subscribe(
+			match => {
+				this.enableForm(false);
+				if (this.id == 0)
+					this.router.navigate(['./match/' + match.id]);
+				else {
+					this.match = match;
+					this.loadMatch(this.match);
+				}
+			});
 	}
 
 	editMatch() {
@@ -175,10 +198,15 @@ export class MatchComponent extends BaseComponent {
 	}
 
 	deleteMatch() {
-		if (this.apiService.deleteMatch(this.matchForm.get('id').value)) {
-			this.matchForm.reset();
-			this.router.navigate(['../matches']);
+		if (confirm(`Delete match ?`)) {
+			this.apiService.deleteMatch(this.matchForm.get('id').value)
+				.subscribe(result => this.router.navigate(['../matches']));
 		}
+	}
+
+	undoChanges() {
+		this.enableForm(false);
+		this.getMatchFromUrl();
 	}
 
 	addPlayer() {
@@ -187,15 +215,5 @@ export class MatchComponent extends BaseComponent {
 
 	removePlayer(id: number) {
 		(this.matchForm.get('players') as FormArray).removeAt(id);
-	}
-
-	undoChanges() {
-		this.router.navigate(['../match/' + this.id]);
-	}
-
-	get formControls() { return this.matchForm.controls; }
-
-	isInvalid(control: AbstractControl): boolean {
-		return control.invalid && (control.dirty || control.touched || this.editable);
 	}
 }

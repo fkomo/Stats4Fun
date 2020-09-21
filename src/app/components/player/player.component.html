@@ -12,7 +12,7 @@
 		<div style="clear:both;"></div>
 		<section>
 			<label>Meno:
-				<input style="width:128px" formControlName="name" placeholder="Player name ..."
+				<input style="width:128px" formControlName="name" placeholder="?"
 					[ngClass]="{ 'invalid': isInvalid(formControls.name) }" />
 			</label>
 			<label>Dátum narodenia:
@@ -20,20 +20,20 @@
 					[ngClass]="{ 'invalid': isInvalid(formControls.dateOfBirth) }" />
 			</label>
 			<label>Číslo na drese:
-				<input style="width:128px" formControlName="number" placeholder="Player number ..." />
+				<input style="width:128px" formControlName="number" placeholder="?" />
 			</label>
 		</section>
 		<section>
 			<label>Tím:
 				<select formControlName="teamId" [ngClass]="{ 'invalid': isInvalid(formControls.teamId) }">
-					<option value="0">select team</option>
+					<option value="0">?</option>
 					<option *ngFor="let item of teams" [ngValue]="item.id">{{ item.name }}</option>
 				</select>
 			</label>
 			<label>Post:
 				<select formControlName="playerPositionId"
 					[ngClass]="{ 'invalid': isInvalid(formControls.playerPositionId) }">
-					<option value="0">select position</option>
+					<option value="0">?</option>
 					<option *ngFor="let item of playerPositions" [ngValue]="item.id">{{ item.name }}</option>
 				</select>
 			</label>
@@ -56,19 +56,23 @@
 				{{ getPlayerAge(playerForm.get('dateOfBirth').value) }} rokov</div>
 			<div>{{ getEnum('playerPositions', playerForm.get('playerPositionId').value).name }}</div>
 			<div>{{ getEnum('teams', playerForm.get('teamId').value).name }}</div>
-			<div>{{ playerSeasons.length }} {{ getStringMutation(playerSeasons.length, 'sezóna', 'sezóny', 'sezón') }}</div>
+			<div *ngIf="playerSeasons.length > 0">{{ playerSeasons.length }}
+				{{ getStringMutation(playerSeasons.length, 'sezóna', 'sezóny', 'sezón') }}</div>
 			<div *ngIf="playerForm.get('retired').value">Neaktívny</div>
 		</div>
 	</h1>
 
 	<div *ngIf="!editable && enumsLoaded && playerSeasons.length > 1">
-		<h2>Odohraté sezóny</h2>
+		<h2>Odohraté Sezóny</h2>
 		<ul class="tags">
 			<li *ngFor="let i of playerSeasons" (click)="getSeasonStats(i.id);">{{ i.name }}</li>
 		</ul>
+		<!-- <div style="display:table-cell;width:30%;" *ngIf="stats != null">
+				<app-scoring-chart [stats]="stats"></app-scoring-chart>
+			</div> -->
 	</div>
 
-	<div *ngIf="!editable && enumsLoaded && stats.length > 0 && playerMatches.length > 0">
+	<div *ngIf="!editable && enumsLoaded && stats.length > 0 && playerMatches != null && playerMatches.gamesPlayed > 0">
 		<h2>Bodovanie a Zápasy {{ seasonId }}/{{ seasonId + 1 }}</h2>
 		<div class="top-matches">
 			<div *ngFor="let m of bestScores">
@@ -79,7 +83,7 @@
 		<app-scoring-timeline [matches]="playerMatches" [stats]="stats"></app-scoring-timeline>
 	</div>
 
-	<div *ngIf="!editable && playerMatches.length > 0">
+	<div *ngIf="!editable && playerMatches != null && playerMatches.gamesPlayed > 0">
 		<br />
 		<app-match-list [matches]="playerMatches"></app-match-list>
 	</div>

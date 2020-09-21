@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Match, MatchAdapter } from '../models/match';
-import { MATCHES, PLAYER_MATCH_STATS, PLAYER_STATS, PLAYERS, TEAM_STATS } from './mock-data';
+import { Match, MatchAdapter, Matches, MatchesAdapter } from '../models/match';
 import { Player, PlayerAdapter } from '../models/player';
-import { PlayerMatchStatsAdapter, PlayerStatsAdapter } from '../models/stats';
+import { PlayerStats, PlayerStatsAdapter } from '../models/playerStats';
 import { Enum, EnumAdapter } from '../models/enum';
 import { LogService } from './log.service';
-import { PlayerStats, TeamStats, PlayerMatchStats } from '../models/stats';
 import { Observable, of } from 'rxjs';
 import { map } from "rxjs/operators";
 import { forkJoin } from 'rxjs';  // RxJS 6 syntax
@@ -26,7 +24,7 @@ export class ApiService {
 		private playerAdapter: PlayerAdapter,
 		private playerStatsAdapter: PlayerStatsAdapter,
 		private matchAdapter: MatchAdapter,
-		private playerMatchStatsAdapter: PlayerMatchStatsAdapter) {
+		private matchesAdapter: MatchesAdapter) {
 	}
 
 	enumAll(): Observable<Enum[][]> {
@@ -192,43 +190,40 @@ export class ApiService {
 	getPlayer(id: number): Observable<Player> {
 		this.log.add(`getPlayer(${id})`);
 
-		// get: /players/:id
+		// get: /player/:id
 		return this.http.get(`${this.baseUrl}/player/${id}`).pipe(
 			map((data: any) => this.playerAdapter.adapt(data))
 		);
+	}
+
+	private createPlayerApiInput(player: Player) {
+		return {
+			id: player.playerId == 0 ? null : player.playerId,
+			name: player.name,
+			dateOfBirth: player.dateOfBirth,
+			number: player.number,
+			playerPositionId: player.playerPositionId,
+			teamId: player.teamId,
+			retired: player.retired,
+		};
 	}
 
 	savePlayer(player: Player): Observable<Player> {
 		this.log.add(player);
 
 		// insert
-		if (player.id == 0) {
+		if (player.playerId == 0) {
 			// post: /player
-			return this.http.post(`${this.baseUrl}/player`,
-				{
-					name: player.name,
-					dateOfBirth: player.dateOfBirth,
-					number: player.number,
-					playerPositionId: player.playerPositionId,
-					teamId: player.teamId,
-					retired: player.retired,
-				}).pipe(
+			return this.http.post(`${this.baseUrl}/player`, this.createPlayerApiInput(player))
+				.pipe(
 					map((data: any) => this.playerAdapter.adapt(data))
 				);
 		}
 		// update
 		else {
 			// put: /player/:id
-			return this.http.put(`${this.baseUrl}/player/${player.id}`,
-				{
-					id: player.id,
-					name: player.name,
-					dateOfBirth: player.dateOfBirth,
-					number: player.number,
-					playerPositionId: player.playerPositionId,
-					teamId: player.teamId,
-					retired: player.retired,
-				}).pipe(
+			return this.http.put(`${this.baseUrl}/player/${player.playerId}`, this.createPlayerApiInput(player))
+				.pipe(
 					map((data: any) => this.playerAdapter.adapt(data))
 				);
 		}
@@ -241,87 +236,122 @@ export class ApiService {
 		return this.http.delete(`${this.baseUrl}/player/${id}`);
 	}
 
-	listPlayerMatches(id: number, seasonId: number): Observable<Match[]> {
+	listPlayerMatches(id: number, seasonId: number): Observable<Matches> {
 		this.log.add(`listPlayerMatches(${id}, ${seasonId})`);
 
 		// /matches/player/:id
 		return this.http.post(`${this.baseUrl}/matches/player/${id}`, {
 			season: seasonId == 0 ? null : seasonId,
 		}).pipe(
-			map((data: any[]) => data.map((item) => this.matchAdapter.adapt(item)))
+			map((data: any[]) => this.matchesAdapter.adapt(data))
 		);
 	}
 
-	listPlayerMatchesStats(id: number, seasonId: number): Observable<PlayerMatchStats[]> {
+	listPlayerMatchesStats(id: number, seasonId: number): Observable<PlayerStats[]> {
 		this.log.add(`listPlayerMatchesStats(${id}, ${seasonId})`);
 
-		// /stats/player/:id
+		// post: /stats/player/:id
 		return this.http.post(`${this.baseUrl}/stats/player/${id}`, {
 			season: seasonId == 0 ? null : seasonId,
 		}).pipe(
-			map((data: any[]) => data.map((item) => this.playerMatchStatsAdapter.adapt(item)))
+			map((data: any[]) => data.map((item) => this.playerStatsAdapter.adapt(item)))
 		);
 	}
 
-	getTeamStats(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
-		competitionId: number): Observable<TeamStats> {
-		this.log.add(`getTeamStats(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
-
-		// /team/stats
-		return of(TEAM_STATS[1]);
-	}
-
-	getMutualStats(team1Id: number, team2Id: number): Observable<TeamStats> {
-		this.log.add(`getMutualStats(${team1Id}, ${team2Id})`);
-
-		// /stats/teams
-		return of(TEAM_STATS[0]);
-	}
-
-	listMutualMatches(team1Id: number, team2Id: number): Observable<Match[]> {
-		this.log.add(`listMutualMatches(${team1Id}, ${team2Id})`);
-
-		// /matches/teams
-		return of(MATCHES);
-	}
-
 	listMatches(seasonId: number, teamId: number, matchTypeId: number, placeId: number, matchResultId: number,
-		competitionId: number): Observable<Match[]> {
+		competitionId: number): Observable<Matches> {
 		this.log.add(`listMatches(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
 
-		// /matches
-		return of(MATCHES);
+		// post: /matches
+		return this.http.post(`${this.baseUrl}/matches`,
+			{
+				seasonId: seasonId == 0 ? null : seasonId,
+				teamId: teamId == 0 ? null : teamId,
+				matchTypeId: matchTypeId == 0 ? null : matchTypeId,
+				placeId: placeId == 0 ? null : placeId,
+				matchResultId: matchResultId == 0 ? null : matchResultId,
+				competitionId: competitionId == 0 ? null : competitionId,
+			}).pipe(
+				map((data: any) => this.matchesAdapter.adapt(data))
+			);
 	}
 
-	listMatchPlayers(id: number): Observable<PlayerStats[]> {
-		this.log.add(`listMatchPlayers(${id})`);
+	listMutualMatches(teamId: number, opponentTeamId: number): Observable<Matches> {
+		this.log.add(`listMutualMatches(${teamId}, ${opponentTeamId})`);
 
-		// /stats/match/:id
-		return of(PLAYER_STATS);
+		if (teamId == 0 || opponentTeamId == 0)
+			return of({} as Matches);
+
+		// get: /matches/teams/:teamId/:opponentTeamId
+		return this.http.get(`${this.baseUrl}/matches/teams/${teamId}/${opponentTeamId}`).pipe(
+			map((data: any) => this.matchesAdapter.adapt(data))
+		);
 	}
 
-	getMatch(id: number): Match {
+	getMatch(id: number): Observable<Match> {
 		this.log.add(`getMatch(${id})`);
 
-		var match = MATCHES.find(m => m.id == id);
-		if (match != null)
-			match.players = PLAYER_MATCH_STATS.filter(ps => ps.matchId == match.id);
-
-		// /match/:id
-		return match;
+		// get: /match/:id
+		return this.http.get(`${this.baseUrl}/match/${id}`).pipe(
+			map((data: any) => this.matchAdapter.adapt(data))
+		);
 	}
 
-	saveMatch(match: Match): Match {
+	private createMatchApiInput(match: Match) {
+		let result = {
+			id: match.id == 0 ? null : match.id,
+			dateTime: match.dateTime,
+			matchTypeId: match.matchTypeId,
+			placeId: match.placeId,
+			competitionId: match.competitionId,
+			homeTeamId: match.homeTeamId,
+			awayTeamId: match.awayTeamId,
+			homeTeamScore: match.homeTeamScore,
+			awayTeamScore: match.awayTeamScore,
+			players: [],
+		};
+
+		match.players.forEach(p => {
+			result.players.push({
+				playerStatsId: p.playerStatsId == 0 ? null : p.playerStatsId,
+				matchId: p.matchId == 0 ? null : p.matchId,
+				playerId: p.playerId,
+				goals: p.goals,
+				assists: p.assists,
+				posNegPoints: p.posNegPoints,
+				yellowCards: p.yellowCards,
+				redCards: p.redCards,
+			});
+		});
+
+		return result;
+	}
+
+	saveMatch(match: Match): Observable<Match> {
 		this.log.add(match);
 
-		// /match/:id
-		return match;
+		// insert
+		if (match.id == 0) {
+			// post: /match
+			return this.http.post(`${this.baseUrl}/match`, this.createMatchApiInput(match))
+				.pipe(
+					map((data: any) => this.matchAdapter.adapt(data))
+				);
+		}
+		// update
+		else {
+			// put: /match/:id
+			return this.http.put(`${this.baseUrl}/match/${match.id}`, this.createMatchApiInput(match))
+				.pipe(
+					map((data: any) => this.matchAdapter.adapt(data))
+				);
+		}
 	}
 
-	deleteMatch(id: number): boolean {
+	deleteMatch(id: number): Observable<any> {
 		this.log.add(`deleteMatch(${id})`);
 
-		// /match/:id
-		return true;
+		// delete: /player
+		return this.http.delete(`${this.baseUrl}/match/${id}`);
 	}
 }

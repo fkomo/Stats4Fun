@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PlayerStats } from 'src/app/models/stats';
+import { PlayerStats } from 'src/app/models/playerStats';
 import { ApiService } from '../../services/api.service';
 import { BaseComponent } from '../base/base.component';
 

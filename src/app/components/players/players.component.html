@@ -32,5 +32,5 @@
 </div>
 
 <div id="content">
-	<app-player-list *ngIf="enumsLoaded" [players]="players" [expandedView]="true"></app-player-list>
+	<app-player-list *ngIf="enumsLoaded && players != null && players.length > 0" [players]="players" [expandedView]="true"></app-player-list>
 </div>

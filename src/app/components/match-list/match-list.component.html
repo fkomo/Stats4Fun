@@ -1,28 +1,46 @@
-<div *ngIf="teamStats != null && teamStats.team2Id != 0">
-	<h2 *ngIf="teamStats != null && teamStats.team2Id != 0">All Mutual Matches</h2>
-	<div class="row">
+<div *ngIf="matches != null && matches.opponentTeamId != null">
+	<h2>Spoločné Zápasy</h2>
+	<!-- <div class="row">
 		<div class="right score-cell" [ngStyle]="{'width.%':(50 - goalsForPercentage) | number : '1.2-2' }">
-			{{ teamStats.goalsFor }} goals
+			{{ matches.goalsFor }} Gólov
 		</div>
 		<div class="score-cell" [ngStyle]="{'width.%':goalsForPercentage | number : '1.2-2' }">
-			<div class="score right color8">&#160;</div>
+			<div class="score right color6">4Fun</div>
 		</div>
 		<div class="center score-cell">:</div>
 		<div class="score-cell" [ngStyle]="{'width.%':goalsAgainstPercentage | number : '1.2-2' }">
-			<div class="score left color9">&#160;</div>
+			<div class="score left color99">&#160;</div>
 		</div>
 		<div class="left score-cell" [ngStyle]="{'width.%':(50 - goalsAgainstPercentage) | number : '1.2-2' }">
-			{{ teamStats.goalsAgainst }} goals
+			{{ matches.goalsAgainst }} Gólov
+		</div>
+	</div> -->
+	<div style="display:table;width:100%;">
+		<div style="display:table-cell;width:50%;">
+			<div>
+				<canvas baseChart [datasets]="goalsChartData" [labels]="goalsChartLabels" [options]="goalsChartOptions"
+					[legend]="goalsChartLegend" [chartType]="goalsChartType">
+				</canvas>
+			</div>
+		</div>
+		<div style="display:table-cell;width:50%;">
+			<div>
+				<canvas baseChart [datasets]="resultsChartData" [labels]="resultsChartLabels" [options]="resultsChartOptions"
+					[legend]="resultsChartLegend" [chartType]="resultsChartType">
+				</canvas>
+			</div>
 		</div>
 	</div>
+	<br />
 </div>
 
-<div *ngIf="matches != null && matches.length > 1">
+<div *ngIf="matches != null && matches.matches != null && matches.matches.length > 1">
 	<div class="timeline-row" [ngClass]="{
-			'tl-normal' : matches.length < 31, 
-			'tl-tight' : matches.length > 30, 
-			'hide-text': matches.length > 30 }">
-		<div *ngFor="let match of matches">
+			'tl-normal' : matches.gamesPlayed < 31, 
+			'tl-tight' : matches.gamesPlayed > 30 && matches.gamesPlayed < 101, 
+			'tl-super-tight' : matches.gamesPlayed > 100, 
+			'hide-text': matches.gamesPlayed > 30}">
+		<div *ngFor="let match of matches.matches.slice().reverse()">
 			<a href="/match/{{ match.id }}"
 				class="{{ getMatchColor(match) }}">{{ match.homeTeamScore }}:{{ match.awayTeamScore }}</a>
 		</div>
@@ -41,7 +59,7 @@
 		<div (click)="sort('awayTeamScore')">&#160;</div>
 		<div class="left" (click)="sort('awayTeam')">Hostia</div>
 	</div>
-	<a class="matches-row" *ngFor="let match of matches" href="/match/{{ match.id }}">
+	<a class="matches-row" *ngFor="let match of matches.matches" href="/match/{{ match.id }}">
 		<div class="left">{{ match.dateTime | date:'dd. M. yyyy H:mm' }}</div>
 		<div class="left not-important">{{ getEnum('places', match.placeId).name }}</div>
 		<!-- <div class="left not-important">{{ getEnum('matchTypes', match.matchTypeId).name }}</div> -->
