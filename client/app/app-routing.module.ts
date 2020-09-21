@@ -7,6 +7,7 @@ import { MatchesComponent } from './components/matches/matches.component';
 import { MatchComponent } from './components/match/match.component';
 import { EnumComponent } from './components/enum/enum.component';
 import { EnumsComponent } from './components/enums/enums.component';
+import { StatsComponent } from './components/stats/stats.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/players', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
 	{ path: 'match', component: MatchComponent },
 	{ path: 'enum', component: EnumComponent },
 	{ path: 'enums', component: EnumsComponent },
+	{ path: 'stats', component: StatsComponent },
 ];
 
 @NgModule({

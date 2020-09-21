@@ -55,6 +55,8 @@ export class MatchComponent extends BaseComponent {
 	}
 
 	ngOnInit(): void {
+		console.log('TODO BUG ngOnInit is called twice');
+
 		super.ngOnInit();
 		this.getMatchFromUrl();
 	}

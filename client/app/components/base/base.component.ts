@@ -56,12 +56,12 @@ export class BaseComponent implements OnInit {
 				this.playerNames = this.setStorage('playerNames', allEnums[6]);
 				this.playerPositions = this.setStorage('playerPositions', allEnums[7]);
 				this.enumsLoaded = this.setStorage('enumsLoaded', true);
+
+				this.orderedPlayerNames = this.playerNames.sort((i1, i2) => {
+					return i1.name.localeCompare(i2.name);
+				});
 			});
 		}
-
-		this.orderedPlayerNames = this.playerNames.sort((i1, i2) => {
-			return i1.name.localeCompare(i2.name);
-		});
 	}
 
 	public getEnum(enumName: string, id: number): Enum {

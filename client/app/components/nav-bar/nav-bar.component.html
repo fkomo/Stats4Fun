@@ -1,11 +1,15 @@
 <div id="menu-bar">
 	<div>
 		<a class="color1" routerLink="/players" (click)="tabChanged('players')"
-			[class.selected]="currentTab === 'players'">Hráčske Štatistiky</a>
+			[class.selected]="currentTab === 'players'">Hráči</a>
 	</div>
 	<div>
 		<a class="color2" routerLink="/matches" (click)="tabChanged('matches')"
 			[class.selected]="currentTab === 'matches'">Zápasy</a>
+	</div>
+	<div>
+		<a class="color8" routerLink="/stats" (click)="tabChanged('stats')"
+			[class.selected]="currentTab === 'stats'">Štatistiky</a>
 	</div>
 	<div>
 		<a class="color3" routerLink="/match" (click)="tabChanged('new-match')"

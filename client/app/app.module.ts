@@ -18,6 +18,7 @@ import { BaseComponent } from './components/base/base.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { ScoringTimelineComponent } from './components/scoring-timeline/scoring-timeline.component';
 import { ScoringChartComponent } from './components/scoring-chart/scoring-chart.component';
+import { StatsComponent } from './components/stats/stats.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ScoringChartComponent } from './components/scoring-chart/scoring-chart.
 	PlayerListComponent,
 	ScoringTimelineComponent,
 	ScoringChartComponent,
+	StatsComponent,
   ],
   imports: [
 	BrowserModule,

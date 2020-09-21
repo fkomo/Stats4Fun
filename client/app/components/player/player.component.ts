@@ -7,7 +7,7 @@ import { Match, Matches } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { PlayerStats } from '../../models/playerStats';
 import { BestScore } from '../../models/bestScore';
-import { Enum } from 'src/app/models/enum';
+import { Enum } from '../../models/enum';
 
 @Component({
 	selector: 'app-player',
@@ -62,6 +62,8 @@ export class PlayerComponent extends BaseComponent {
 	}
 
 	ngOnInit(): void {
+		console.log('TODO BUG ngOnInit is called twice');
+
 		super.ngOnInit();
 		this.getPlayerFromUrl();
 	}
