@@ -18,3 +18,49 @@
 	TODO najdlhsia seria bez bodu (sezona/total)
 	<br />
 </section>
+
+<div style="display:table;width:100%;">
+	<div style="display:table-cell;width:50%;">
+		<div style="height:200px;">
+			<canvas baseChart 
+				[datasets]="topGoalsChartDataSets"
+				[labels]="topGoalsChartLabels"
+				[options]="chartOptions"
+				[chartType]="topGoalsChartType">
+			</canvas>
+		</div>
+	</div>	
+	<div style="display:table-cell;width:50%;">
+		<div style="height:200px;">
+			<canvas baseChart 
+				[datasets]="topAssistsChartDataSets"
+				[labels]="topAssistsChartLabels"
+				[options]="chartOptions"
+				[chartType]="topAssistsChartType">
+			</canvas>
+		</div>
+	</div>	
+</div>
+
+<div style="display:table;width:100%;">
+	<div style="display:table-cell;width:50%;">
+		<div style="height:200px;">
+			<canvas baseChart 
+				[datasets]="topPointsChartDataSets"
+				[labels]="topPointsChartLabels"
+				[options]="chartOptions"
+				[chartType]="topPointsChartType">
+			</canvas>
+		</div>
+	</div>	
+	<div style="display:table-cell;width:50%;">
+		<div style="height:200px;">
+			<canvas baseChart 
+				[datasets]="topPosNegChartDataSets"
+				[labels]="topPosNegChartLabels"
+				[options]="chartOptions"
+				[chartType]="topPosNegChartType">
+			</canvas>
+		</div>
+	</div>	
+</div>

@@ -15,7 +15,7 @@ import { forkJoin } from 'rxjs';  // RxJS 6 syntax
 
 export class ApiService {
 
-	private baseUrl = "http://localhost:8042/api";
+	private baseUrl = "http://localhost:8080/api";
 
 	constructor(
 		private log: LogService,
