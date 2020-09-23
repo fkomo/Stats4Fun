@@ -218,4 +218,10 @@ export class MatchComponent extends BaseComponent {
 	removePlayer(id: number) {
 		(this.matchForm.get('players') as FormArray).removeAt(id);
 	}
+
+	isKontumacia(): boolean {
+		return this.match.players.length == 0 && 
+			((this.match.homeTeamScore == 0 && this.match.awayTeamScore == 5) ||
+			(this.match.homeTeamScore == 5 && this.match.awayTeamScore == 0));
+	}
 }

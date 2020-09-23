@@ -1,15 +1,15 @@
 <form id="content" [formGroup]="playerForm" (ngSubmit)="savePlayer()">
 
-	<section>
+	<section *ngIf="isAdmin()">
 		<div class="button" type="submit" [class.hidden]="!editable || !playerForm.valid" (click)="savePlayer()">Save
 		</div>
 		<div class="button" [class.hidden]="editable" (click)="editPlayer()">Edit</div>
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="deletePlayer()">Delete</div>
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
 	</section>
+	<div style="clear:both;"></div>
 
 	<div *ngIf="editable">
-		<div style="clear:both;"></div>
 		<section>
 			<label>Meno:
 				<input style="width:128px" formControlName="name" placeholder="?"
@@ -41,12 +41,11 @@
 		</section>
 	</div>
 
-	<h1 *ngIf="!editable && enumsLoaded && id != 0">
-		<div class="detail-header">
-			<div *ngIf="playerForm.get('number').value == null" class="center">{{ playerForm.get('name').value }}</div>
-			<div *ngIf="playerForm.get('number').value != null" class="center">{{ playerForm.get('name').value }}
-				#{{ playerForm.get('number').value }}</div>
-		</div>
+	<div *ngIf="!editable && enumsLoaded && id != 0">
+		<h1 class="center">
+			<span>{{ playerForm.get('name').value }}</span>
+			<span *ngIf="playerForm.get('number').value != null"> #{{ playerForm.get('number').value }}</span>
+		</h1>
 		<div class="detail-tags">
 			<div *ngIf="playerForm.get('dateOfBirth').value != null">
 				{{ getPlayerAge(playerForm.get('dateOfBirth').value) }} rokov</div>
@@ -56,10 +55,10 @@
 				{{ getStringMutation(playerSeasons.length, 'sezóna', 'sezóny', 'sezón') }}</div>
 			<div *ngIf="playerForm.get('retired').value">Neaktívny</div>
 		</div>
-	</h1>
+	</div>
 
 	<div *ngIf="!editable && enumsLoaded && playerSeasons.length > 1">
-		<h2>Odohraté Sezóny</h2>
+		<!-- <h2>Odohraté Sezóny</h2> -->
 		<ul class="tags">
 			<li *ngFor="let i of playerSeasons" (click)="getSeasonStats(i.id);">{{ i.name }}</li>
 		</ul>
@@ -72,7 +71,7 @@
 		<h2>Bodovanie a Zápasy {{ seasonId }}/{{ seasonId + 1 }}</h2>
 		<div class="top-matches">
 			<div *ngFor="let m of bestScores">
-				<a href="/match/{{ m.matchId }}">{{ m.score }} {{ m.scoreType }} proti
+				<a routerLink="/match/{{ m.matchId }}">{{ m.score }} {{ m.scoreType }} proti
 					{{ getEnum('teams', m.opponentTeamId).name }}</a>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-<div id="content">
+<div id="content" *ngIf="isAdmin()">
 
 	<section>
 		<div class="button" (click)="clearCache()">Clear Cache</div>

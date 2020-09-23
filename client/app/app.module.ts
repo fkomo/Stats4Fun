@@ -19,6 +19,7 @@ import { PlayerListComponent } from './components/player-list/player-list.compon
 import { ScoringTimelineComponent } from './components/scoring-timeline/scoring-timeline.component';
 import { ScoringChartComponent } from './components/scoring-chart/scoring-chart.component';
 import { StatsComponent } from './components/stats/stats.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { StatsComponent } from './components/stats/stats.component';
 	ScoringTimelineComponent,
 	ScoringChartComponent,
 	StatsComponent,
+	AdminComponent,
   ],
   imports: [
 	BrowserModule,

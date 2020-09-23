@@ -11,16 +11,20 @@
 		<a class="color8" routerLink="/stats" (click)="tabChanged('stats')"
 			[class.selected]="currentTab === 'stats'">Štatistiky</a>
 	</div>
-	<div>
+	<div *ngIf="isAdmin()">
 		<a class="color3" routerLink="/match" (click)="tabChanged('new-match')"
 			[class.selected]="currentTab === 'new-match'">Nový Zápas</a>
 	</div>
-	<div>
+	<div *ngIf="isAdmin()">
 		<a class="color4" routerLink="/player" (click)="tabChanged('new-player')"
 			[class.selected]="currentTab === 'new-player'">Nový Hráč</a>
 	</div>
-	<div>
+	<div *ngIf="isAdmin()">
 		<a class="color5" routerLink="/enums" (click)="tabChanged('enums')"
 			[class.selected]="currentTab === 'enums'">Enums</a>
+	</div>
+	<div *ngIf="isAdmin()">
+		<a class="color6" routerLink="/admin" (click)="tabChanged('admin')"
+			[class.selected]="currentTab === 'admin'">Admin</a>
 	</div>
 </div>

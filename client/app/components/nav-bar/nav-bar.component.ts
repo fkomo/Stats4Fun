@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'client/app/services/api.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
 	selector: 'app-nav-bar',
@@ -6,11 +8,13 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./nav-bar.component.css']
 })
 
-export class NavBarComponent implements OnInit {
+export class NavBarComponent extends BaseComponent {
 
 	currentTab: string;
 
-	constructor() {
+	constructor(
+		protected apiService: ApiService) {
+		super(apiService)
 	}
 
 	tabChanged(tabName: string): void {
@@ -18,6 +22,7 @@ export class NavBarComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		super.ngOnInit();
 		this.tabChanged('players');
 	}
 }

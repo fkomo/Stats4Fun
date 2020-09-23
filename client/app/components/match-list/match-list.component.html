@@ -41,7 +41,7 @@
 			'tl-super-tight' : matches.gamesPlayed > 100, 
 			'hide-text': matches.gamesPlayed > 30}">
 		<div *ngFor="let match of matches.matches.slice().reverse()">
-			<a href="/match/{{ match.id }}"
+			<a routerLink="/match/{{ match.id }}"
 				class="{{ getMatchColor(match) }}">{{ match.homeTeamScore }}:{{ match.awayTeamScore }}</a>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 		<div (click)="sort('awayTeamScore')">&#160;</div>
 		<div class="left" (click)="sort('awayTeam')">Hostia</div>
 	</div>
-	<a class="matches-row" *ngFor="let match of matches.matches" href="/match/{{ match.id }}">
+	<a class="matches-row" *ngFor="let match of matches.matches" routerLink="/match/{{ match.id }}">
 		<div class="left">{{ match.dateTime | date:'dd. M. yyyy H:mm' }}</div>
 		<div class="left not-important">{{ getEnum('places', match.placeId).name }}</div>
 		<!-- <div class="left not-important">{{ getEnum('matchTypes', match.matchTypeId).name }}</div> -->

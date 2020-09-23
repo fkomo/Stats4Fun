@@ -16,7 +16,7 @@
 		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='ties'" (click)="sort('ties')">T</div>
 	</div>
 	<a class="players-row" [class.retired]="player.retired === true" 
-		*ngFor="let player of players" href="/player/{{ player.playerId }}">
+		*ngFor="let player of players" routerLink="/player/{{ player.playerId }}">
 		<!-- <xsl:otherwise>&#160;</xsl:otherwise> -->
 		<div [class.hilighted]="selectedColumn=='number'" class="not-important">{{ player.number }}</div>
 		<div [class.hilighted]="selectedColumn=='name'" class="left">{{ player.name }}</div>

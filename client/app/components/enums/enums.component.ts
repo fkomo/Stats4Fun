@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'client/app/services/api.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
 	selector: 'app-enums',
@@ -6,11 +8,15 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./enums.component.css']
 })
 
-export class EnumsComponent implements OnInit {
+export class EnumsComponent extends BaseComponent {
 
-	constructor() { }
+	constructor(
+		protected apiService: ApiService) {
+		super(apiService)
+	}
 
 	ngOnInit(): void {
+		super.ngOnInit();
 	}
 
 	clearCache() {

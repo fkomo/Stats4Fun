@@ -81,19 +81,16 @@ a.retired {
 .players-row:nth-child(-n + 4) {
   background-color: rgba(120, 120, 64, 1);
   color: white;
-  font-weight: bold;
 }
 
 .players-row:nth-child(-n + 3) {
   background-color: rgba(150, 150, 64, 1);
   color: white;
-  font-weight: bold;
 }
 
 .players-row:nth-child(-n + 2) {
   background-color: rgba(180, 180, 64, 1);
   color: white;
-  font-weight: bold;
 }
 
 .players-header div,

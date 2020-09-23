@@ -1,6 +1,6 @@
 <form id="content" [formGroup]="matchForm" (ngSubmit)="saveMatch()">
 
-	<section>
+	<section *ngIf="isAdmin()">
 		<div class="button" [class.hidden]="!editable" (click)="addPlayer()">Add Player</div>
 		<div class="button" type="submit" [class.hidden]="!editable || !matchForm.valid" (click)="saveMatch()">Save
 		</div>
@@ -8,9 +8,9 @@
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="deleteMatch()">Delete</div>
 		<div class="button" [class.hidden]="!editable || id == 0" (click)="undoChanges()">Undo</div>
 	</section>
+	<div style="clear:both;"></div>
 
 	<div *ngIf="editable">
-		<div style="clear:both;"></div>
 		<section>
 			<label>Dátum a čas:
 				<input type="datetime-local" formControlName="dateTime" />
@@ -81,7 +81,8 @@
 				<label>
 					<select style="width:184px" formControlName="playerId">
 						<option value="0">?</option>
-						<option *ngFor="let player of orderedPlayerNames" [ngValue]="player.id">{{ player.name }}</option>
+						<option *ngFor="let player of orderedPlayerNames" [ngValue]="player.id">{{ player.name }}
+						</option>
 					</select>
 				</label>
 				<label>
@@ -106,26 +107,25 @@
 		</div>
 	</div>
 
-	<h1 *ngIf="!editable && enumsLoaded && id != 0">
-		<div class="detail-header">
-			<div class="right" [ngStyle]="{'width.%':50 }"
-				[class.winner]="matchForm.get('homeTeamScore').value > matchForm.get('awayTeamScore').value">
+	<div *ngIf="!editable && enumsLoaded && id != 0">
+		<h1 class="center">
+			<span [class.winner]="matchForm.get('homeTeamScore').value > matchForm.get('awayTeamScore').value">
 				{{ getEnum('teams', matchForm.get('homeTeamId').value).name }}
 				({{ matchForm.get('homeTeamScore').value }})
-			</div>
-			<div class="center">:</div>
-			<div class="left" [ngStyle]="{'width.%':50 }"
-				[class.winner]="matchForm.get('homeTeamScore').value < matchForm.get('awayTeamScore').value">
+			</span>
+			:
+			<span [class.winner]="matchForm.get('homeTeamScore').value < matchForm.get('awayTeamScore').value">
 				({{ matchForm.get('awayTeamScore').value }})
 				{{ getEnum('teams', matchForm.get('awayTeamId').value).name }}
-			</div>
-		</div>
+			</span>
+		</h1>
 		<div class="detail-tags">
 			<div>{{ matchForm.get('dateTime').value | date: 'dd. MM. yyyy HH:mm, EEEE' }}</div>
 			<div>{{ getEnum('competitions', matchForm.get('competitionId').value).name }}</div>
 			<div>{{ getEnum('places', matchForm.get('placeId').value).name }}</div>
+			<div *ngIf="isKontumacia()">Kontumácia</div>
 		</div>
-	</h1>
+	</div>
 
 	<div *ngIf="!editable && match != null && match.players != null && match.players.length > 0">
 		<app-player-list *ngIf="enumsLoaded" [players]="match.players" [expandedView]="false"></app-player-list>

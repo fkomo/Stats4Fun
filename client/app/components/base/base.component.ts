@@ -136,4 +136,8 @@ export class BaseComponent implements OnInit {
 			return two2Five;
 		return more;
 	}
+
+	isAdmin(): boolean {
+		return this.getBoolFromStorage('admin');
+	}
 }

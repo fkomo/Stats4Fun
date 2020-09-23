@@ -201,8 +201,6 @@ hr {
 
 .detail-tags div {
   border: 16px solid var(--primary-bg-color);
-  font-size: 0.5em;
-  font-weight: normal;
   display: table-cell;
   text-align: center;
   background-color: var(--element-bg-color);
