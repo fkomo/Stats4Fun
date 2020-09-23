@@ -1,6 +1,9 @@
 {
 	"name": "stats4fun",
 	"version": "1.0.0",
+	"description": "4Fun Futsal Team stats ui",
+	"author": "fkomo",
+	"license": "ISC",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
@@ -32,5 +35,9 @@
 		"ts-node": "~8.3.0",
 		"tslint": "~6.1.0",
 		"typescript": "~3.9.5"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fkomo/Stats4Fun.git"
 	}
 }
