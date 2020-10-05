@@ -21,5 +21,6 @@ export class EnumsComponent extends BaseComponent {
 
 	clearCache() {
 		sessionStorage.clear();	
+		localStorage.clear();
 	}
 }

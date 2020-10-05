@@ -2,6 +2,7 @@
 	<div class="players-header">
 		<div [class.hilighted]="selectedColumn=='number'" class="not-important" (click)="sort('number')">#</div>
 		<div [class.hilighted]="selectedColumn=='name'" class="left" (click)="sort('name')">Meno</div>
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='age'" (click)="sort('age')">Vek</div>
 		<div [class.hilighted]="selectedColumn=='playerPosition'" class="left not-important"
 			(click)="sort('playerPosition')">Post</div>
 		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='gamesPlayed'" (click)="sort('gamesPlayed')">GP</div>
@@ -20,6 +21,9 @@
 		<!-- <xsl:otherwise>&#160;</xsl:otherwise> -->
 		<div [class.hilighted]="selectedColumn=='number'" class="not-important">{{ player.number }}</div>
 		<div [class.hilighted]="selectedColumn=='name'" class="left">{{ player.name }}</div>
+		
+		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='age'">{{ getPlayerAge(player.dateOfBirth) }}</div>
+		
 		<div [class.hilighted]="selectedColumn=='playerPosition'" class="left not-important">
 			{{ getEnum('playerPositions', player.playerPositionId).name }}</div>
 		<div *ngIf="expandedView" [class.hilighted]="selectedColumn=='gamesPlayed'">{{ player.gamesPlayed }}</div>

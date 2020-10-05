@@ -8,8 +8,12 @@
 			[class.selected]="currentTab === 'matches'">Zápasy</a>
 	</div>
 	<div>
-		<a class="color8" routerLink="/stats" (click)="tabChanged('stats')"
-			[class.selected]="currentTab === 'stats'">Štatistiky</a>
+		<a class="color8" routerLink="/teamStats" (click)="tabChanged('team-stats')"
+			[class.selected]="currentTab === 'team-stats'">Tímové Štatistiky</a>
+	</div>
+	<div>
+		<a class="color7" routerLink="/playerStats" (click)="tabChanged('player-stats')"
+			[class.selected]="currentTab === 'player-stats'">Individuálne Štatistiky</a>
 	</div>
 	<div *ngIf="isAdmin()">
 		<a class="color3" routerLink="/match" (click)="tabChanged('new-match')"
@@ -23,8 +27,8 @@
 		<a class="color5" routerLink="/enums" (click)="tabChanged('enums')"
 			[class.selected]="currentTab === 'enums'">Enums</a>
 	</div>
-	<div *ngIf="isAdmin()">
-		<a class="color6" routerLink="/admin" (click)="tabChanged('admin')"
+	<div>
+		<a class="color9" (click)="tabChanged('admin')"
 			[class.selected]="currentTab === 'admin'">Admin</a>
 	</div>
 </div>

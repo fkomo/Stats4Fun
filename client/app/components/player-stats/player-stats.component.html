@@ -1,0 +1,56 @@
+<div>
+	<div class="buttons" *ngIf="enumsLoaded">
+		<div>
+			<a class="color99" (click)="changeTeam(0)" [class.selected]="selectedTeam == 0">4Fun</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(3)"
+				[class.selected]="selectedTeam == 3">{{ getEnum('teams', 3).name }}</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(4)"
+				[class.selected]="selectedTeam == 4">{{ getEnum('teams', 4).name }}</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(5)"
+				[class.selected]="selectedTeam == 5">{{ getEnum('teams', 5).name }}</a>
+		</div>
+	</div>
+
+	<h2>{{ getEnum('teams', selectedTeam).name }} MVP's</h2>
+	<div class="mvps">
+		<div class="mvp-names">
+			<div *ngFor="let mvp of mvps" [ngStyle]="{'width.%':(100.0 / mvps.length) | number : '1.2-2' }">
+				<a routerLink="/player/{{ mvp.playerId }}">{{ mvp.playerName }} #{{ mvp.playerNumber }}</a>
+			</div>
+		</div>
+		<div class="mvp-badges">
+			<div *ngFor="let mvp of mvps">
+				<ul class="seasons">
+					<li *ngFor="let season of mvp.seasonIds">{{ season }}/{{ season + 1 }}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<h2>Najviac gólov v zápase</h2>
+	<h2>Najviac asistencií v zápase</h2>
+	<h2>Najviac bodov v zápase</h2>
+	<h2>Hetriky</h2>
+	<!-- <div style="display:table;">
+		<ul class="hattricks">
+			<li>
+				<div style="display:table;width:128px;">
+					<div style="display:table-cell">Miso Zidzik</div>
+					<div style="display:table-cell">40</div>
+				</div>
+			</li>
+			<li>
+				<div style="display:table;width:128px;">
+					<div style="display:table-cell">Miso Zidzik</div>
+					<div style="display:table-cell">40</div>
+				</div>
+			</li>
+		</ul>
+	</div> -->
+</div>

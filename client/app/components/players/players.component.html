@@ -19,7 +19,7 @@
 	</div>
 	<div class="filter">
 		<select [(ngModel)]="teamId" (change)="filter()">
-			<option value="0">Všetci súperi</option>
+			<option value="0">Všetky tímy</option>
 			<option *ngFor="let item of teams" [ngValue]="item.id">{{ item.name }}</option>
 		</select>
 	</div>
@@ -29,8 +29,23 @@
 			<option *ngFor="let item of playerPositions" [ngValue]="item.id">{{ item.name }}</option>
 		</select>
 	</div>
+	<div class="filter">
+		<select [(ngModel)]="playerStateId" (change)="filter()">
+			<option value="0">Všetci hráči</option>
+			<option *ngFor="let item of playerStates" [ngValue]="item.id">{{ item.name }}</option>
+		</select>
+	</div>
 </div>
 
 <div id="content">
+	
+	<div class="tags" *ngIf="enumsLoaded && players != null && players.length > 0">
+		<div>{{ players.length }} {{ getStringMutation(players.length, 'hráč', 'hráči', 'hráčov') }}</div>
+		<div *ngIf="goalkeeperCount > 0">{{ goalkeeperCount }} {{ getStringMutation(goalkeeperCount, 'brankár', 'brankári', 'brankárov') }}</div>
+		<div *ngIf="defenderCount > 0">{{ defenderCount }} {{ getStringMutation(defenderCount, 'obranca', 'obrancovia', 'obrancov') }}</div>
+		<div *ngIf="attackerCount > 0">{{ attackerCount }} {{ getStringMutation(attackerCount, 'útočník', 'útočníci', 'útočníkov') }}</div>
+		<div *ngIf="avgAge > 0">vekový priemer {{ avgAge | number : '1.0-0' }} rokov</div>
+	</div>
+
 	<app-player-list *ngIf="enumsLoaded && players != null && players.length > 0" [players]="players" [expandedView]="true"></app-player-list>
 </div>

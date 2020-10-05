@@ -120,23 +120,23 @@ export class ScoringTimelineComponent extends BaseComponent {
 			data: [], label: ' +/- Body', stack: 'a'
 		};
 
-		this.matches.matches.forEach(m => {
+		this.matches.matches.slice().reverse().forEach(m => {
 			let label = `${m.dateTime.toLocaleDateString('sk-SK')}: ${this.getEnum('teams', m.awayTeamId).name} vs ${this.getEnum('teams', m.homeTeamId).name}`;
 			this.barChartLabels.push(label);
 		});
 
 		// goals
-		this.stats.forEach(s => {
+		this.stats.slice().reverse().forEach(s => {
 			goals.data.push(s.goals);
 		});
 
 		// assists
-		this.stats.forEach(s => {
+		this.stats.slice().reverse().forEach(s => {
 			assists.data.push(s.assists);
 		});
 
 		// +/- points
-		this.stats.forEach(s => {
+		this.stats.slice().reverse().forEach(s => {
 			points.data.push(s.posNegPoints);
 		});
 

@@ -21,6 +21,8 @@ export class MatchesComponent extends BaseComponent {
 	matchResultId: number;
 	competitionId: number;
 
+	avgMatchPlayers: number = 0;
+
 	constructor(
 		protected apiService: ApiService) {
 		super(apiService);
@@ -55,6 +57,18 @@ export class MatchesComponent extends BaseComponent {
 			this.placeId,
 			this.matchResultId,
 			this.competitionId)
-			.subscribe(i => this.matches = i);
+			.subscribe(i => {
+				this.matches = i;
+				this.getPlayerMatchAvg();
+			});
+	}
+
+	getPlayerMatchAvg() {
+		this.avgMatchPlayers = 0;
+		this.apiService.listPlayerStats(this.seasonId, this.matchTypeId, this.competitionId, this.teamId,
+			null, null).subscribe(players => {
+				this.avgMatchPlayers = Math.floor(players.
+					reduce(function (sum, p) { return sum + p.gamesPlayed }, 0) / this.matches.gamesPlayed);
+			});
 	}
 }

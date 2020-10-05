@@ -6,14 +6,22 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { Match, Matches } from '../../models/match';
 import { BaseComponent } from '../base/base.component';
 import { PlayerStats } from '../../models/playerStats';
-import { BestScore } from '../../models/bestScore';
 import { Enum } from '../../models/enum';
+import { LogService } from 'client/app/services/log.service';
+
+export interface BestScore {
+	score: number;
+	scoreType: string;
+	matchId: number;
+	opponentTeamId: number;
+}
 
 @Component({
 	selector: 'app-player',
 	templateUrl: './player.component.html',
 	styleUrls: ['./player.component.css']
 })
+
 
 export class PlayerComponent extends BaseComponent {
 
@@ -31,6 +39,7 @@ export class PlayerComponent extends BaseComponent {
 	get formControls() { return this.playerForm.controls; }
 
 	constructor(
+		private log: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
 		protected apiService: ApiService,
@@ -39,7 +48,6 @@ export class PlayerComponent extends BaseComponent {
 
 		this.id = 0;
 		this.editable = false;
-		this.seasonId = 0;
 
 		this.playerForm = this.formBuilder.group({
 			playerId: this.id,
@@ -61,11 +69,17 @@ export class PlayerComponent extends BaseComponent {
 		});
 	}
 
-	ngOnInit(): void {
-		console.log('TODO BUG ngOnInit is called twice');
+	private ngOnInitInProgress: boolean = false;
 
-		super.ngOnInit();
-		this.getPlayerFromUrl();
+	ngOnInit(): void {
+		if (!this.ngOnInitInProgress) {
+			this.ngOnInitInProgress = true;
+			super.ngOnInit();
+
+			this.seasonId = this.getNumberFromStorage('seasonId', 0);
+
+			this.getPlayerFromUrl();
+		}
 	}
 
 	enableForm(enable: boolean) {
@@ -86,6 +100,7 @@ export class PlayerComponent extends BaseComponent {
 		const id = +this.route.snapshot.paramMap.get('id');
 		if (id == 0) {
 			this.enableForm(true);
+			this.ngOnInitInProgress = false;
 			return;
 		}
 
@@ -116,27 +131,33 @@ export class PlayerComponent extends BaseComponent {
 			.subscribe(seasons => {
 				this.playerSeasons = seasons;
 				if (seasons.length > 0) {
-					this.seasonId = seasons[0].id;
+					if (seasons.find(s => this.seasonId == s.id) == null)
+						this.seasonId = seasons[0].id;
+
 					this.getSeasonStats(this.seasonId);
 				}
+				else
+					this.ngOnInitInProgress = false;
 			});
 	}
 
 	getSeasonStats(seasonId: number) {
-		if (seasonId == 0)
-			return;
+
+		this.seasonId = seasonId;
+		this.setStorage('seasonId', this.seasonId);
 
 		this.stats = [];
 		this.playerMatches = null;
-		this.seasonId = seasonId;
+
+		if (seasonId == 0)
+			return;
 
 		this.apiService.listPlayerMatches(this.id, this.seasonId)
-			.subscribe(i => {
-				this.playerMatches = i;
+			.subscribe(matches => {
+				this.playerMatches = matches;
 				if (this.playerMatches.gamesPlayed > 0) {
-					this.apiService.listPlayerMatchesStats(this.id, this.seasonId).subscribe(i2 => {
-						this.stats = i2;
-
+					this.apiService.listPlayerMatchesStats(this.id, this.seasonId).subscribe(stats => {
+						this.stats = stats;
 						this.bestScores = [];
 
 						var mostGoals = this.stats.reduce(function (a, b) {
@@ -174,8 +195,12 @@ export class PlayerComponent extends BaseComponent {
 								opponentTeamId: this.getOpponentTeamId(mostPoints.matchId),
 							});
 						}
+
+						this.ngOnInitInProgress = false;
 					});
 				}
+				else
+					this.ngOnInitInProgress = false;
 			});
 	}
 
@@ -195,11 +220,18 @@ export class PlayerComponent extends BaseComponent {
 
 		this.apiService.savePlayer(player).subscribe(
 			player => {
+				this.log.add(player);
 				this.enableForm(false);
-				if (this.id == 0)
-					this.router.navigate(['./player/' + player.playerId]);
-				else
-					this.loadPlayer(player);
+				if (player != null && player.playerId != null) {
+					if (this.id == 0)
+						this.router.navigate(['./player/' + player.playerId]);
+					else
+						this.loadPlayer(player);
+				}
+				else {
+					// TODO save player failed - show error
+					this.router.navigate(['./player/0']);
+				}
 			});
 	}
 
@@ -217,13 +249,6 @@ export class PlayerComponent extends BaseComponent {
 	undoChanges() {
 		this.enableForm(false);
 		this.getPlayerFromUrl();
-	}
-
-	getPlayerAge(dateOfBirth: Date): number {
-		if (dateOfBirth == null)
-			return null;
-		var timeDiff = Math.abs(Date.now() - new Date(dateOfBirth).getTime());
-		return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
 	}
 
 	getOpponentTeamId(matchId: number): number {

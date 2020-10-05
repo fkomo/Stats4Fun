@@ -5,6 +5,7 @@ import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlayerStats } from '../../models/playerStats';
 import { BaseComponent } from '../base/base.component';
+import { LogService } from 'client/app/services/log.service';
 
 @Component({
 	selector: 'app-match',
@@ -25,6 +26,7 @@ export class MatchComponent extends BaseComponent {
 	get formControls() { return this.matchForm.controls; }
 
 	constructor(
+		private log: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
 		protected apiService: ApiService,
@@ -54,11 +56,15 @@ export class MatchComponent extends BaseComponent {
 		});
 	}
 
-	ngOnInit(): void {
-		console.log('TODO BUG ngOnInit is called twice');
+	private ngOnInitInProgress: boolean = false;
 
-		super.ngOnInit();
-		this.getMatchFromUrl();
+	ngOnInit(): void {
+		if (!this.ngOnInitInProgress) {
+			this.ngOnInitInProgress = true;
+
+			super.ngOnInit();
+			this.getMatchFromUrl();
+		}
 	}
 
 	enableForm(enable: boolean) {
@@ -86,6 +92,7 @@ export class MatchComponent extends BaseComponent {
 		const id = +this.route.snapshot.paramMap.get('id');
 		if (id == 0) {
 			this.enableForm(true);
+			this.ngOnInitInProgress = false;
 			return;
 		}
 
@@ -122,7 +129,10 @@ export class MatchComponent extends BaseComponent {
 			this.apiService.listMutualMatches(
 				opponentTeamId == match.homeTeamId ? match.awayTeamId : match.homeTeamId,
 				opponentTeamId)
-				.subscribe(i => this.mutualMatches = i);
+				.subscribe(i => {
+					this.mutualMatches = i;
+					this.ngOnInitInProgress = false;
+				});
 		}
 		else
 			this.router.navigate(['../matches']);
@@ -185,12 +195,19 @@ export class MatchComponent extends BaseComponent {
 
 		this.apiService.saveMatch(match).subscribe(
 			match => {
+				this.log.add(match);
 				this.enableForm(false);
-				if (this.id == 0)
-					this.router.navigate(['./match/' + match.id]);
+				if (match != null && match.id != null) {
+					if (this.id == 0)
+						this.router.navigate(['./match/' + match.id]);
+					else {
+						this.match = match;
+						this.loadMatch(this.match);
+					}
+				}
 				else {
-					this.match = match;
-					this.loadMatch(this.match);
+					// TODO save match failed - show error
+					this.router.navigate(['./match/0']);
 				}
 			});
 	}
@@ -220,8 +237,8 @@ export class MatchComponent extends BaseComponent {
 	}
 
 	isKontumacia(): boolean {
-		return this.match.players.length == 0 && 
+		return this.match.players.length == 0 &&
 			((this.match.homeTeamScore == 0 && this.match.awayTeamScore == 5) ||
-			(this.match.homeTeamScore == 5 && this.match.awayTeamScore == 0));
+				(this.match.homeTeamScore == 5 && this.match.awayTeamScore == 0));
 	}
 }

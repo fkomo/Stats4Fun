@@ -21,6 +21,11 @@ export class BaseComponent implements OnInit {
 	playerPositions: Enum[];
 	enumsLoaded: boolean = false;
 
+	playerStates: Enum[] = [
+		{ id: 3, name: 'Aktívny' },
+		{ id: 2, name: 'Neaktívny' }
+	];
+
 	orderedPlayerNames: Enum[];
 
 	protected comboBoxValidator = [
@@ -43,6 +48,7 @@ export class BaseComponent implements OnInit {
 			this.competitions = this.getEnumFromStorage('competitions');
 			this.playerNames = this.getEnumFromStorage('playerNames');
 			this.playerPositions = this.getEnumFromStorage('playerPositions');
+			this.orderedPlayerNames = this.getEnumFromStorage('orderedPlayerNames');
 			this.enumsLoaded = true;
 		}
 		else {
@@ -55,11 +61,13 @@ export class BaseComponent implements OnInit {
 				this.competitions = this.setStorage('competitions', allEnums[5]);
 				this.playerNames = this.setStorage('playerNames', allEnums[6]);
 				this.playerPositions = this.setStorage('playerPositions', allEnums[7]);
-				this.enumsLoaded = this.setStorage('enumsLoaded', true);
 
-				this.orderedPlayerNames = this.playerNames.sort((i1, i2) => {
-					return i1.name.localeCompare(i2.name);
-				});
+				this.orderedPlayerNames = this.setStorage('orderedPlayerNames',
+					this.playerNames.sort((i1, i2) => {
+						return i1.name.localeCompare(i2.name);
+					}));
+
+				this.enumsLoaded = this.setStorage('enumsLoaded', true);
 			});
 		}
 	}
@@ -81,11 +89,11 @@ export class BaseComponent implements OnInit {
 				return this.competitions.find(i => i.id == id);
 
 			case 'teams':
-				return this.teams.find(i => i.id == id);
+				return id == 0 ? new Enum(0, '4Fun') : this.teams.find(i => i.id == id);
 
 			case 'playerPositions':
 				return this.playerPositions.find(i => i.id == id);
-			
+
 			case 'seasons':
 				return this.seasons.find(i => i.id == id);
 
@@ -139,5 +147,17 @@ export class BaseComponent implements OnInit {
 
 	isAdmin(): boolean {
 		return this.getBoolFromStorage('admin');
+	}
+
+	protected getAccessToken() {
+		var oktaTokenStorage = JSON.parse(localStorage.getItem('okta-token-storage'));
+		return oktaTokenStorage.accessToken.value;
+	}
+
+	public getPlayerAge(dateOfBirth: Date): number {
+		if (dateOfBirth == null)
+			return null;
+		var timeDiff = Math.abs(Date.now() - new Date(dateOfBirth).getTime());
+		return Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
 	}
 }

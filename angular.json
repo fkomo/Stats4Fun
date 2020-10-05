@@ -48,7 +48,8 @@
 						"aot": true,
 						"assets": [
 							"client/favicon.ico",
-							"client/assets"
+							"client/assets",
+							"client/.env.js"
 						],
 						"styles": [
 							"client/styles.css"

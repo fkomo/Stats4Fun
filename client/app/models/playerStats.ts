@@ -21,7 +21,7 @@ export class PlayerStats extends Player {
 	constructor(
 		playerId: number,
 		name: string,
-		//dateOfBirth: Date, 
+		dateOfBirth: string, 
 		number: number,
 		teamId: number,
 		playerPositionId: number,
@@ -42,7 +42,7 @@ export class PlayerStats extends Player {
 		matchId: number,
 		playerStatsId: number
 	) {
-		super(playerId, name, null, number, teamId, playerPositionId, retired);
+		super(playerId, name, dateOfBirth, number, teamId, playerPositionId, retired);
 
 		this.gamesPlayed = gamesPlayed;
 		this.wins = wins;
@@ -67,7 +67,7 @@ export class PlayerStats extends Player {
 export class PlayerStatsAdapter implements Adapter<PlayerStats> {
 	adapt(i: any): PlayerStats {
 		return new PlayerStats(
-			i.playerId, i.name, i.number, i.teamId, i.playerPositionId, i.retired,
+			i.playerId, i.name, i.dateOfBirth, i.number, i.teamId, i.playerPositionId, i.retired,
 			i.gamesPlayed, i.wins, i.losses, i.ties,
 			i.goals, i.assists, i.points, i.posNegPoints, i.yellowCards, i.redCards,
 			i.matchId, i.playerStatsId);

@@ -1,0 +1,40 @@
+h2 {
+	text-align: center;
+}
+
+div.buttons {
+	width: 100%;
+	display: table;
+	line-height: 32px;
+	overflow-x: auto;
+	margin: auto;
+}
+
+div.buttons div {
+	border-left: 8px solid var(--primary-bg-color);
+	border-right: 8px solid var(--primary-bg-color);
+	display: table-cell;
+	text-align: center;
+	transition-duration: 0.3s;
+	opacity: 1;
+}
+
+div.buttons div a {
+	display: block;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+}
+
+div.buttons div a.selected {
+	background-color: #606060b3;
+}
+
+div.buttons div:hover {
+	opacity: 0.7;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}

@@ -49,6 +49,11 @@ export class PlayerListComponent extends BaseComponent {
 					return order * ((i1.number > i2.number) ? 1 : (i1.number < i2.number) ? -1 : 0);
 				case "name":
 					return order * i1.name.localeCompare(i2.name);
+				case "age": {
+					const i1Age = this.getPlayerAge(i1.dateOfBirth);
+					const i2Age = this.getPlayerAge(i2.dateOfBirth);
+					return order * ((i1Age > i2Age) ? 1 : (i1Age < i2Age) ? -1 : 0);
+				}
 				case "playerPosition":
 					return order * ((i1.playerPositionId > i2.playerPositionId) ? 1 : (i1.playerPositionId < i2.playerPositionId) ? -1 : 0);
 				case "gamesPlayed":

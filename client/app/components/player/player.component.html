@@ -58,9 +58,8 @@
 	</div>
 
 	<div *ngIf="!editable && enumsLoaded && playerSeasons.length > 1">
-		<!-- <h2>Odohraté Sezóny</h2> -->
 		<ul class="tags">
-			<li *ngFor="let i of playerSeasons" (click)="getSeasonStats(i.id);">{{ i.name }}</li>
+			<li [class.selected]="seasonId == i.id" *ngFor="let i of playerSeasons" (click)="getSeasonStats(i.id);">{{ i.name }}</li>
 		</ul>
 		<!-- <div style="display:table-cell;width:30%;" *ngIf="stats != null">
 				<app-scoring-chart [stats]="stats"></app-scoring-chart>

@@ -18,37 +18,59 @@ import { BaseComponent } from './components/base/base.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { ScoringTimelineComponent } from './components/scoring-timeline/scoring-timeline.component';
 import { ScoringChartComponent } from './components/scoring-chart/scoring-chart.component';
-import { StatsComponent } from './components/stats/stats.component';
-import { AdminComponent } from './components/admin/admin.component';
+import { TeamStatsComponent } from './components/team-stats/team-stats.component';
+import { PlayerStatsComponent } from './components/player-stats/player-stats.component';
+import { OKTA_CONFIG, OktaAuthModule, } from '@okta/okta-angular';
+import { AuthComponent } from './components/auth/auth.component';
+import { EnvServiceFactory, EnvServiceProvider } from './services/env.service.provider';
+
+// TODO move okta configuration to .env.js
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PlayerComponent,
-    PlayersComponent,
-    MatchComponent,
-    MatchesComponent,
-    NavBarComponent,
-    EnumComponent,
-	EnumsComponent,
-	MatchListComponent,
-	BaseComponent,
-	PlayerListComponent,
-	ScoringTimelineComponent,
-	ScoringChartComponent,
-	StatsComponent,
-	AdminComponent,
-  ],
-  imports: [
-	BrowserModule,
-	ChartsModule,
-	AppRoutingModule,
-	ReactiveFormsModule,
-	FormsModule,
-	HttpClientModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent,
+		PlayerComponent,
+		PlayersComponent,
+		MatchComponent,
+		MatchesComponent,
+		NavBarComponent,
+		EnumComponent,
+		EnumsComponent,
+		MatchListComponent,
+		BaseComponent,
+		PlayerListComponent,
+		ScoringTimelineComponent,
+		ScoringChartComponent,
+		TeamStatsComponent,
+		PlayerStatsComponent,
+		AuthComponent,
+	],
+	imports: [
+		BrowserModule,
+		ChartsModule,
+		AppRoutingModule,
+		ReactiveFormsModule,
+		FormsModule,
+		HttpClientModule,
+		OktaAuthModule,
+	],
+	providers: [
+		EnvServiceProvider,
+		{
+			provide: OKTA_CONFIG, 
+			//useValue: okta_config,
+			useFactory: () => {
+				return {
+					clientId: '0oa11j4br1pNtQx3c4x7',
+					issuer: 'https://dev-245864.okta.com/oauth2/default',
+					redirectUri: 'http://localhost:4200/auth/callback',
+					scopes: ['openid', 'email', 'groups'],
+					pkce: true
+				};
+			}
+		},
+	],
+	bootstrap: [AppComponent]
 })
 
 export class AppModule { }

@@ -1,207 +1,242 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --primary-bg-color: #1e1e1e;
-  --element-bg-color: #2e2e2e;
-  --selected-bg-color: #3e3e3e;
-  --selected-cell-bg-color: #393939;
-  --primary-font-color: #acacac;
-  --secondary-font-color: #dcdcdc;
-  --selected-font-color: #4c4c4c;
-  --hilighted-font-color: #ffffff;
+	--primary-bg-color: #1e1e1e;
+	--element-bg-color: #2e2e2e;
+	--selected-bg-color: #3e3e3e;
+	--selected-cell-bg-color: #393939;
+	--primary-font-color: #acacac;
+	--secondary-font-color: #dcdcdc;
+	--selected-font-color: #4c4c4c;
+	--hilighted-font-color: #ffffff;
 }
 
 .color0 {
-  background-color: #808080b3;
-  border-color: rgba(128, 128, 128, 0.9);
+	background-color: #808080b3;
+	border-color: #808080e6;
 }
 
 .color1 {
-  background-color: rgba(255, 99, 132, 0.7);
-  border-color: rgba(255, 99, 132, 0.9);
+	background-color: rgba(255, 99, 132, 0.7);
+	border-color: rgba(255, 99, 132, 0.9);
 }
 
 .color2 {
-  background-color: rgba(54, 162, 235, 0.7);
-  border-color: rgba(54, 162, 235, 0.9);
+	background-color: rgba(54, 162, 235, 0.7);
+	border-color: rgba(54, 162, 235, 0.9);
 }
 
 .color3 {
-  background-color: rgba(255, 206, 86, 0.7);
-  border-color: rgba(255, 206, 86, 0.9);
+	background-color: rgba(255, 206, 86, 0.7);
+	border-color: rgba(255, 206, 86, 0.9);
 }
 
 .color4 {
-  background-color: rgba(75, 192, 192, 0.7);
-  border-color: rgba(75, 192, 192, 0.9);
+	background-color: rgba(75, 192, 192, 0.7);
+	border-color: rgba(75, 192, 192, 0.9);
 }
 
 .color5 {
-  background-color: rgba(153, 102, 255, 0.7);
-  border-color: rgba(153, 102, 255, 0.9);
+	background-color: rgba(153, 102, 255, 0.7);
+	border-color: rgba(153, 102, 255, 0.9);
 }
 
 .color6 {
-  background-color: rgba(255, 159, 64, 0.7);
-  border-color: rgba(255, 159, 64, 0.9);
+	background-color: rgba(255, 159, 64, 0.7);
+	border-color: rgba(255, 159, 64, 0.9);
 }
 
 .color7 {
-  background-color: rgba(21, 54, 183, 0.7);
-  border-color: rgba(21, 54, 183, 0.9);
+	background-color: rgba(21, 54, 183, 0.7);
+	border-color: rgba(21, 54, 183, 0.9);
 }
 
 .color8 {
-  background-color: #1fcb22b3;
-  border-color: rgba(31, 203, 34, 0.9);
+	background-color: #1fcb22b3;
+	border-color: #1fcb22e6;
 }
 
 .color9 {
-  background-color: #e21f1fb3;
-  border-color: rgba(226, 31, 31, 0.9);
+	background-color: #e21f1fb3;
+	border-color: #e21f1fe6;
 }
 
 .color10 {
-  background-color: rgba(255, 216, 0, 0.7);
-  border-color: rgba(255, 216, 0, 0.9);
+	background-color: rgba(255, 216, 0, 0.7);
+	border-color: rgba(255, 216, 0, 0.9);
 }
 
 .color99 {
-  background-color: var(--element-bg-color);
-  border-color: var(--selected-bg-color);
+	background-color: var(--element-bg-color);
+	border-color: var(--selected-bg-color);
 }
 
 * {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-  background-color: var(--primary-bg-color);
-  color: var(--primary-font-color);
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-  font-size: smaller;
-  height: 100%;
+	background-color: var(--primary-bg-color);
+	color: var(--primary-font-color);
+	font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+		"Lucida Sans", Arial, sans-serif;
+	font-size: smaller;
+	height: 100%;
 }
 
 #page-content {
-  width: 960px;
-  overflow-x: auto;
-  margin: auto;
+	width: 960px;
+	overflow-x: auto;
+	margin: auto;
 }
 
 #filter-container {
-  width: 960px;
-  line-height: 32px;
-  height: 32px;
-  vertical-align: middle;
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 16px;
+	width: 960px;
+	line-height: 32px;
+	height: 32px;
+	vertical-align: middle;
+	display: table;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 16px;
 }
 
 .filter {
-  border-left: 4px solid var(--primary-bg-color);
-  border-right: 4px solid var(--primary-bg-color);
-  text-align: center;
-  display: table-cell;
+	border-left: 4px solid var(--primary-bg-color);
+	border-right: 4px solid var(--primary-bg-color);
+	text-align: center;
+	display: table-cell;
 }
 
 .filter select {
-  color: var(--secondary-font-color);
-  background-color: var(--element-bg-color);
-  width: 100%;
-  height: 32px;
-  padding-left: 4px;
-  cursor: pointer;
-  border-width: 0px;
+	color: var(--secondary-font-color);
+	background-color: var(--element-bg-color);
+	width: 100%;
+	height: 32px;
+	padding-left: 4px;
+	cursor: pointer;
+	border-width: 0px;
 }
 
 .clickable {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .number {
-  text-align: center;
+	text-align: center;
 }
 
 .left {
-  text-align: left;
-  padding-left: 8px;
+	text-align: left;
+	padding-left: 8px;
 }
 
 .right {
-  text-align: right;
-  padding-right: 8px;
+	text-align: right;
+	padding-right: 8px;
 }
 
 .center {
-  text-align: center;
+	text-align: center;
 }
 
 .toolbar {
-  height: 32px;
-  margin-bottom: 8px;
+	height: 32px;
+	margin-bottom: 8px;
 }
 
 section {
-  margin-bottom: 8px;
+	margin-bottom: 8px;
 }
 
 section .button {
-  float: left;
-  margin-right: 8px;
+	float: left;
+	margin-right: 8px;
 }
 
 .hidden {
-  display: none;
+	display: none;
 }
 
 .button {
-  background-color: var(--element-bg-color);
-  border: 1px solid var(--selected-bg-color);
-  cursor: pointer;
-  text-decoration: none;
-  text-align: center;
-  padding: 6px 16px;
-  transition-duration: 0.4s;
-  height: 32px;
-  vertical-align: middle;
+	background-color: var(--element-bg-color);
+	border: 1px solid var(--selected-bg-color);
+	cursor: pointer;
+	text-decoration: none;
+	text-align: center;
+	padding: 6px 16px;
+	transition-duration: 0.4s;
+	height: 32px;
+	vertical-align: middle;
 }
 
 .button:hover {
-  background-color: var(--selected-bg-color);
-  color: var(--hilighted-font-color);
+	background-color: var(--selected-bg-color);
+	color: var(--hilighted-font-color);
 }
 
 hr {
-  margin-top: 16px;
-  border-color: var(--selected-bg-color);
+	margin-top: 16px;
+	border-color: var(--selected-bg-color);
 }
 
 .detail-header {
-  width: 100%;
-  display: table;
+	width: 100%;
+	display: table;
 }
 
 .detail-header div {
-  display: table-cell;
+	display: table-cell;
 }
 
 .detail-tags {
-  width: 80%;
-  display: table;
-  line-height: 32px;
-  overflow-x: auto;
-  margin: auto;
+	width: 80%;
+	display: table;
+	line-height: 32px;
+	overflow-x: auto;
+	margin: auto;
 }
 
 .detail-tags div {
-  border: 16px solid var(--primary-bg-color);
-  display: table-cell;
-  text-align: center;
-  background-color: var(--element-bg-color);
+	border: 16px solid var(--primary-bg-color);
+	display: table-cell;
+	text-align: center;
+	background-color: var(--element-bg-color);
+}
+
+ul.tags li {
+	list-style-type: none;
+	padding: 4px;
+	display: inline-block;
+	text-align: center;
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--selected-bg-color);
+	vertical-align: middle;
+	margin: 4px;
+	color: var(--primary-font-color);
+	background-color: var(--element-bg-color);
+	cursor: pointer;
+}
+
+ul.tags li:hover {
+	border-color: var(--hilighted-font-color);
+	color: var(--hilighted-font-color);
+}
+
+div.tags {
+	width: 100%;
+	display: table;
+	line-height: 32px;
+	overflow-x: auto;
+	margin: auto;
+}
+
+div.tags div {
+	border: 16px solid var(--primary-bg-color);
+	display: table-cell;
+	text-align: center;
+	background-color: var(--element-bg-color);
 }

@@ -112,3 +112,46 @@ export class MatchesAdapter implements Adapter<Matches> {
 			item.matches);
 	}
 }
+
+export class BestWorstMatches {
+	mostGoalsScored: Match[];
+	mostGoalsTaken: Match[];
+	bestScoreDiff: Match[];
+	worstScoreDiff: Match[];
+	constructor(
+		mostGoalsScored: any[],
+		mostGoalsTaken: any[],
+		bestScoreDiff: any[],
+		worstScoreDiff: any[]) {
+		let matchAdapter = new MatchAdapter();
+		this.mostGoalsScored = [];
+		this.mostGoalsTaken = [];
+		this.bestScoreDiff = [];
+		this.worstScoreDiff = [];
+
+		if (mostGoalsScored != null)
+			this.mostGoalsScored = mostGoalsScored.map(item => matchAdapter.adapt(item)) as Match[];
+		
+		if (mostGoalsTaken != null)
+			this.mostGoalsTaken = mostGoalsTaken.map(item => matchAdapter.adapt(item)) as Match[];
+		
+		if (bestScoreDiff != null)
+			this.bestScoreDiff = bestScoreDiff.map(item => matchAdapter.adapt(item)) as Match[];
+		
+		if (worstScoreDiff != null)
+			this.worstScoreDiff = worstScoreDiff.map(item => matchAdapter.adapt(item)) as Match[];
+	}
+}
+
+@Injectable({
+	providedIn: "root",
+})
+export class BestWorstMatchesAdapter implements Adapter<BestWorstMatches> {
+	adapt(item: any): BestWorstMatches {
+		return new BestWorstMatches(
+			item.mostGoalsScored,
+			item.mostGoalsTaken,
+			item.bestScoreDiff,
+			item.worstScoreDiff);
+	}
+}

@@ -44,3 +44,13 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# ignore configuration
+.env-dev.js
+.env-test.js
+.env-prod.js
+
+# certificates
+*.pem
+
+stats4fun.dock.tar

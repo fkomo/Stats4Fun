@@ -13,7 +13,7 @@
 	</div>
 	<div class="filter">
 		<select [(ngModel)]="teamId" (change)="filter()">
-			<option value="0">Všetci súperi</option>
+			<option value="0">Všetky tímy</option>
 			<option *ngFor="let item of teams" [value]="item.id">{{ item.name }}</option>
 		</select>
 	</div>
@@ -40,12 +40,13 @@
 <div id="content" *ngIf="matches != null && matches.gamesPlayed > 0">
 
 	<div class="team-stats">
-		<div class="color99">{{ matches.gamesPlayed }} {{ getStringMutation(matches.gamesPlayed, 'Zápas', 'Zápasy', 'Zápasov') }}</div>
-		<div class="color99">{{ matches.wins * 3 + matches.ties }} {{ getStringMutation(matches.wins * 3 + matches.ties, 'Bod', 'Body', 'Bodov') }}</div>
-		<div class="color8">{{ matches.wins }} {{ getStringMutation(matches.wins, 'Výhra', 'Výhry', 'Výhier') }}</div>
-		<div class="color9">{{ matches.losses }} {{ getStringMutation(matches.losses, 'Prehra', 'Prehry', 'Prehier') }}</div>
-		<div class="color0">{{ matches.ties }} {{ getStringMutation(matches.ties, 'Remíza', 'Remízy', 'Remíz') }}</div>
+		<div class="color99">{{ matches.gamesPlayed }} {{ getStringMutation(matches.gamesPlayed, 'zápas', 'zápasy', 'zápasov') }}</div>
+		<!-- <div class="color99">{{ matches.wins * 3 + matches.ties }} {{ getStringMutation(matches.wins * 3 + matches.ties, 'bod', 'body', 'bodov') }}</div> -->
+		<div class="color8">{{ matches.wins }} {{ getStringMutation(matches.wins, 'výhra', 'výhry', 'výhier') }}</div>
+		<div class="color9">{{ matches.losses }} {{ getStringMutation(matches.losses, 'prehra', 'prehry', 'prehier') }}</div>
+		<div class="color0">{{ matches.ties }} {{ getStringMutation(matches.ties, 'remíza', 'remízy', 'remíz') }}</div>
 		<div class="color99">Skóre {{ matches.goalsFor }} : {{ matches.goalsAgainst }}</div>
+		<div *ngIf="avgMatchPlayers > 0" class="color99">priemerne {{ avgMatchPlayers | number : '1.0-0' }} {{ getStringMutation(avgMatchPlayers, 'hráč', 'hráči', 'hráčov') }} na zápas</div>
 	</div>
 
 	<app-match-list *ngIf="enumsLoaded && matches.matches != null && matches.matches.length > 0" [matches]="matches"></app-match-list>

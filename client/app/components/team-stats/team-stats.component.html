@@ -1,0 +1,68 @@
+<div>
+	<div class="buttons" *ngIf="enumsLoaded">
+		<div>
+			<a class="color99" (click)="changeTeam(0)" [class.selected]="selectedTeam == 0">4Fun</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(3)"
+				[class.selected]="selectedTeam == 3">{{ getEnum('teams', 3).name }}</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(4)"
+				[class.selected]="selectedTeam == 4">{{ getEnum('teams', 4).name }}</a>
+		</div>
+		<div>
+			<a class="color99" (click)="changeTeam(5)"
+				[class.selected]="selectedTeam == 5">{{ getEnum('teams', 5).name }}</a>
+		</div>
+	</div>
+
+	<h2>Výsledky zápasov</h2>
+	<div style="height:256px">
+		<canvas baseChart [datasets]="resultsChartDataSets" [labels]="seasonsChartLabels"
+			[options]="resultsChartOptions" [chartType]="resultsChartType">
+		</canvas>
+	</div>
+
+	<h2>Skóre</h2>
+	<div style="height:256px">
+		<canvas baseChart [datasets]="scoreChartDataSets" [labels]="seasonsChartLabels" [options]="scoreChartOptions"
+			[chartType]="scoreChartType">
+		</canvas>
+	</div>
+
+	<!-- <h2>Karty</h2>
+	<div style="height:256px">
+		<canvas baseChart 
+			[datasets]="cardsChartDataSets" 
+			[labels]="seasonsChartLabels" 
+			[options]="cardsChartOptions"
+			[chartType]="cardsChartType">
+		</canvas>
+	</div> -->
+
+	<h2>Najviac strelených gólov</h2>
+	<app-match-list
+		*ngIf="enumsLoaded && mostGoalsScored != null && mostGoalsScored.matches != null && mostGoalsScored.matches.length > 0"
+		[matches]="mostGoalsScored"></app-match-list>
+
+	<h2>Najvyššie víťazstvá</h2>
+	<app-match-list
+		*ngIf="enumsLoaded && bestScoreDiff != null && bestScoreDiff.matches != null && bestScoreDiff.matches.length > 0"
+		[matches]="bestScoreDiff"></app-match-list>
+
+	<h2>Najviac inkasovaných gólov</h2>
+	<app-match-list
+		*ngIf="enumsLoaded && mostGoalsTaken != null && mostGoalsTaken.matches != null && mostGoalsTaken.matches.length > 0"
+		[matches]="mostGoalsTaken"></app-match-list>
+
+	<h2>Najväčšie prehry</h2>
+	<app-match-list
+		*ngIf="enumsLoaded && worstScoreDiff != null && worstScoreDiff.matches != null && worstScoreDiff.matches.length > 0"
+		[matches]="worstScoreDiff"></app-match-list>
+
+	<h2>Najdlhšia séria bez prehry</h2>
+
+	<h2>Najdlhšia séria bez výhry</h2>
+
+</div>

@@ -1,0 +1,103 @@
+h2 {
+	text-align: center;
+}
+
+div.buttons {
+	width: 100%;
+	display: table;
+	line-height: 32px;
+	overflow-x: auto;
+	margin: auto;
+}
+
+div.buttons div {
+	border-left: 8px solid var(--primary-bg-color);
+	border-right: 8px solid var(--primary-bg-color);
+	display: table-cell;
+	text-align: center;
+	transition-duration: 0.3s;
+	opacity: 1;
+}
+
+div.buttons div a {
+	display: block;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+}
+
+div.buttons div a.selected {
+	background-color: #606060b3;
+	color: var(--hilighted-font-color);
+}
+
+div.buttons div:hover {
+	opacity: 0.7;
+	color: var(--hilighted-font-color);
+}
+
+a {
+	color: var(--primary-font-color);
+	text-decoration: none;
+}
+
+a:hover {
+	color: var(--hilighted-font-color);
+}
+
+ul.seasons {
+	padding: 0;
+	display: table;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+ul.seasons li {
+	list-style-type: none;
+	padding: 4px;
+	display: block;
+	width: 80px;
+	text-align: center;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(120, 120, 64, 1);
+	/* vertical-align: middle; */
+	margin: 4px;
+	color: white;
+	background-color: rgb(190, 190, 42);
+}
+
+div.mvps {
+	display: table;
+	width: 100%;
+}
+
+div.mvp-names {
+	display: table-row;
+	text-align: center;
+	color: var(--primary-font-color);
+}
+
+div.mvp-badges {
+	display: table-row;
+}
+
+div.mvp-badges div,
+div.mvp-names div {
+	display: table-cell;
+}
+
+
+ul.hattricks li {
+	list-style-type: none;
+	padding: 4px;
+	display: inline-block;
+	text-align: center;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgba(120, 120, 64, 1);
+	/* vertical-align: middle; */
+	margin: 4px;
+	color: white;
+	background-color: rgb(190, 190, 42);
+}
