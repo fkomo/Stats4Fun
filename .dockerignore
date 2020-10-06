@@ -2,7 +2,7 @@ dist
 node_modules
 npm-debug.log
 stats4fun.dock.tar
-.env.js
-.env-dev.js
-.env-test.js
-.env-prod.js
+.env
+.env-dev
+.env-test
+.env-prod

@@ -46,10 +46,10 @@ testem.log
 Thumbs.db
 
 # ignore configuration
-.env.js
-.env-dev.js
-.env-test.js
-.env-prod.js
+.env
+.env-dev
+.env-test
+.env-prod
 
 # certificates
 *.pem

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnvService } from './env.service';
+import config from '../app.config';
 
 @Injectable({
 	providedIn: 'root'
@@ -7,11 +7,11 @@ import { EnvService } from './env.service';
 
 export class LogService {
 
-	constructor(private env: EnvService) { }
+	constructor() { }
 
 	add(msg: any) {
-		if (!this.env.debug)
-			return;
+		 if (!config.debug)
+		 	return;
 
 		console.log(new Date() + ": " + JSON.stringify(msg));
 	}

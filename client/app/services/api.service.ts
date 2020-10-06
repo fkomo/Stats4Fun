@@ -9,8 +9,8 @@ import { LogService } from './log.service';
 import { Observable, of } from 'rxjs';
 import { map } from "rxjs/operators";
 import { forkJoin } from 'rxjs';  // RxJS 6 syntax
-import { EnvService } from './env.service';
 import { OktaAuthService } from '@okta/okta-angular';
+import config from '../app.config';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,7 +22,6 @@ export class ApiService {
 
 	constructor(
 		public oktaAuth: OktaAuthService,
-		private env: EnvService,
 		private log: LogService,
 		private http: HttpClient,
 		private enumAdapter: EnumAdapter,
@@ -72,7 +71,7 @@ export class ApiService {
 		this.log.add(`enumPlayerNames`);
 
 		// get: /enums/playernames
-		return this.http.get(`${this.env.apiUrl}/enums/playerNames`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/playerNames`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -81,7 +80,7 @@ export class ApiService {
 		this.log.add(`enumCompetitions`);
 
 		// get: /enums/competitions
-		return this.http.get(`${this.env.apiUrl}/enums/competitions`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/competitions`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -90,7 +89,7 @@ export class ApiService {
 		this.log.add(`enumTeams`);
 
 		// get: /enums/teams
-		return this.http.get(`${this.env.apiUrl}/enums/teams`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/teams`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -99,7 +98,7 @@ export class ApiService {
 		this.log.add(`enumPlaces`);
 
 		// get: /enums/places
-		return this.http.get(`${this.env.apiUrl}/enums/places`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/places`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -108,7 +107,7 @@ export class ApiService {
 		this.log.add(`enumMatchTypes`);
 
 		// get: /enums/matchtypes
-		return this.http.get(`${this.env.apiUrl}/enums/matchTypes`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/matchTypes`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -117,7 +116,7 @@ export class ApiService {
 		this.log.add(`enumSeasons`);
 
 		// get: /enums/seasons
-		return this.http.get(`${this.env.apiUrl}/enums/seasons`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/seasons`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -126,7 +125,7 @@ export class ApiService {
 		this.log.add(`enumMatchResults`);
 
 		// get: /enums/matchresults
-		return this.http.get(`${this.env.apiUrl}/enums/matchResults`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/matchResults`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -135,7 +134,7 @@ export class ApiService {
 		this.log.add(`enumPlayerPositions`);
 
 		// get: /enums/playerpositions
-		return this.http.get(`${this.env.apiUrl}/enums/playerPositions`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/playerPositions`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -144,7 +143,7 @@ export class ApiService {
 		this.log.add(`enumStates`);
 
 		// get: /enums/states
-		return this.http.get(`${this.env.apiUrl}/enums/states`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/states`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -155,7 +154,7 @@ export class ApiService {
 		// insert
 		if (item.id == 0) {
 			// post: /enums/*
-			return this.http.post(`${this.env.apiUrl}/enums/${enumName}`,
+			return this.http.post(`${config.apiUrl}/enums/${enumName}`,
 				{ name: item.name, id: item.id },
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -165,7 +164,7 @@ export class ApiService {
 		// update
 		else {
 			// put: /enums/*/:id
-			return this.http.put(`${this.env.apiUrl}/enums/${enumName}/${item.id}`,
+			return this.http.put(`${config.apiUrl}/enums/${enumName}/${item.id}`,
 				{ name: item.name, id: item.id },
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -180,7 +179,7 @@ export class ApiService {
 		this.log.add(`listPlayerStats(${seasonId}, ${matchTypeId}, ${competitionId}, ${teamId}, ${playerPositionId}, ${playerStateId})`);
 
 		// post: /players/stats
-		return this.http.post(`${this.env.apiUrl}/players/stats`,
+		return this.http.post(`${config.apiUrl}/players/stats`,
 			{
 				seasonId: seasonId == 0 ? null : seasonId,
 				matchTypeId: matchTypeId == 0 ? null : matchTypeId,
@@ -197,7 +196,7 @@ export class ApiService {
 		this.log.add(`listPlayerSeasons(${playerId})`);
 
 		// get: /enums/seasons/player/:id
-		return this.http.get(`${this.env.apiUrl}/enums/seasons/player/${playerId}`).pipe(
+		return this.http.get(`${config.apiUrl}/enums/seasons/player/${playerId}`).pipe(
 			map((data: any[]) => data.map((item) => this.enumAdapter.adapt(item)))
 		);
 	}
@@ -206,7 +205,7 @@ export class ApiService {
 		this.log.add(`getPlayer(${id})`);
 
 		// get: /player/:id
-		return this.http.get(`${this.env.apiUrl}/player/${id}`).pipe(
+		return this.http.get(`${config.apiUrl}/player/${id}`).pipe(
 			map((data: any) => this.playerAdapter.adapt(data))
 		);
 	}
@@ -229,7 +228,7 @@ export class ApiService {
 		// insert
 		if (player.playerId == 0) {
 			// post: /player
-			return this.http.post(`${this.env.apiUrl}/player`,
+			return this.http.post(`${config.apiUrl}/player`,
 				this.createPlayerApiInput(player),
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -239,7 +238,7 @@ export class ApiService {
 		// update
 		else {
 			// put: /player/:id
-			return this.http.put(`${this.env.apiUrl}/player/${player.playerId}`,
+			return this.http.put(`${config.apiUrl}/player/${player.playerId}`,
 				this.createPlayerApiInput(player),
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -252,7 +251,7 @@ export class ApiService {
 		this.log.add(`deletePlayer(${id})`);
 
 		// delete: /player
-		return this.http.delete(`${this.env.apiUrl}/player/${id}`,
+		return this.http.delete(`${config.apiUrl}/player/${id}`,
 			{ headers: this.getHeaders() });
 	}
 
@@ -260,7 +259,7 @@ export class ApiService {
 		this.log.add(`listPlayerMatches(${id}, ${seasonId})`);
 
 		// /matches/player/:id
-		return this.http.post(`${this.env.apiUrl}/matches/player/${id}`,
+		return this.http.post(`${config.apiUrl}/matches/player/${id}`,
 			{ season: seasonId == 0 ? null : seasonId })
 			.pipe(
 				map((data: any[]) => this.matchesAdapter.adapt(data))
@@ -271,7 +270,7 @@ export class ApiService {
 		this.log.add(`listPlayerMatchesStats(${id}, ${seasonId})`);
 
 		// post: /stats/player/:id
-		return this.http.post(`${this.env.apiUrl}/stats/player/${id}`, {
+		return this.http.post(`${config.apiUrl}/stats/player/${id}`, {
 			season: seasonId == 0 ? null : seasonId,
 		}).pipe(
 			map((data: any[]) => data.map((item) => this.playerStatsAdapter.adapt(item)))
@@ -283,7 +282,7 @@ export class ApiService {
 		this.log.add(`listMatches(${seasonId}, ${teamId}, ${matchTypeId}, ${placeId}, ${matchResultId}, ${competitionId})`);
 
 		// post: /matches
-		return this.http.post(`${this.env.apiUrl}/matches`,
+		return this.http.post(`${config.apiUrl}/matches`,
 			{
 				seasonId: seasonId == 0 ? null : seasonId,
 				teamId: teamId == 0 ? null : teamId,
@@ -303,7 +302,7 @@ export class ApiService {
 			return of({} as Matches);
 
 		// get: /matches/teams/:teamId/:opponentTeamId
-		return this.http.get(`${this.env.apiUrl}/matches/teams/${teamId}/${opponentTeamId}`).pipe(
+		return this.http.get(`${config.apiUrl}/matches/teams/${teamId}/${opponentTeamId}`).pipe(
 			map((data: any) => this.matchesAdapter.adapt(data))
 		);
 	}
@@ -312,7 +311,7 @@ export class ApiService {
 		this.log.add(`getMatch(${id})`);
 
 		// get: /match/:id
-		return this.http.get(`${this.env.apiUrl}/match/${id}`).pipe(
+		return this.http.get(`${config.apiUrl}/match/${id}`).pipe(
 			map((data: any) => this.matchAdapter.adapt(data))
 		);
 	}
@@ -353,7 +352,7 @@ export class ApiService {
 		// insert
 		if (match.id == 0) {
 			// post: /match
-			return this.http.post(`${this.env.apiUrl}/match`,
+			return this.http.post(`${config.apiUrl}/match`,
 				this.createMatchApiInput(match),
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -363,7 +362,7 @@ export class ApiService {
 		// update
 		else {
 			// put: /match/:id
-			return this.http.put(`${this.env.apiUrl}/match/${match.id}`,
+			return this.http.put(`${config.apiUrl}/match/${match.id}`,
 				this.createMatchApiInput(match),
 				{ headers: this.getHeaders() })
 				.pipe(
@@ -376,7 +375,7 @@ export class ApiService {
 		this.log.add(`deleteMatch(${id})`);
 
 		// delete: /player
-		return this.http.delete(`${this.env.apiUrl}/match/${id}`,
+		return this.http.delete(`${config.apiUrl}/match/${id}`,
 			{ headers: this.getHeaders() });
 	}
 
@@ -397,7 +396,7 @@ export class ApiService {
 		this.log.add(`getTeamStats(${teamId})`);
 
 		// get: /stats/team/:teamId
-		return this.http.get(`${this.env.apiUrl}/stats/team/${teamId}`).pipe(
+		return this.http.get(`${config.apiUrl}/stats/team/${teamId}`).pipe(
 			map((data: any[]) => data.map((item) => this.teamStatsAdapter.adapt(item)))
 		);
 	}
@@ -406,7 +405,7 @@ export class ApiService {
 		this.log.add(`listBestWorstMatches(${teamId})`);
 
 		// get: /matches/stats/:teamId
-		return this.http.get(`${this.env.apiUrl}/matches/stats/${teamId}`).pipe(
+		return this.http.get(`${config.apiUrl}/matches/stats/${teamId}`).pipe(
 			map((data: any) => this.bestWorstMatchesAdapter.adapt(data))
 		);
 	}
@@ -415,7 +414,7 @@ export class ApiService {
 		this.log.add(`listMVPs(${teamId})`);
 
 		// get: /players/mvp/:teamId
-		return this.http.get(`${this.env.apiUrl}/players/mvp/${teamId}`).pipe(
+		return this.http.get(`${config.apiUrl}/players/mvp/${teamId}`).pipe(
 			map((data: any[]) => data.map((item) => this.mvpAdapter.adapt(item)))
 		);
 	}

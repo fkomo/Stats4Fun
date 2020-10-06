@@ -9,9 +9,9 @@ COPY . .
 
 # copy env configuration
 RUN rm -frv /usr/src/app/client/.env*
-COPY ./client/.env-dev.js ./client/.env.js
-#COPY ./client/.env-test.js ./client/.env.js
-#COPY ./client/.env-prod.js ./client/.env.js
+COPY ./client/.env-dev ./client/.env
+#COPY ./client/.env-test ./client/.env
+#COPY ./client/.env-prod ./client/.env
 
 # build application
 RUN npm run build

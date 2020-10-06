@@ -38,8 +38,11 @@
 			"prefix": "app",
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-angular:browser",
+					"builder": "@angular-builders/custom-webpack:browser",
 					"options": {
+						"customWebpackConfig": {
+							"path": "client/webpack.config.js"
+						},
 						"outputPath": "dist/stats4fun",
 						"index": "client/index.html",
 						"main": "client/main.ts",
@@ -48,8 +51,7 @@
 						"aot": true,
 						"assets": [
 							"client/favicon.ico",
-							"client/assets",
-							"client/.env.js"
+							"client/assets"
 						],
 						"styles": [
 							"client/styles.css"
@@ -69,6 +71,7 @@
 							"sourceMap": false,
 							"extractCss": true,
 							"namedChunks": false,
+							"aot": true,
 							"extractLicenses": true,
 							"vendorChunk": false,
 							"buildOptimizer": true,
@@ -88,7 +91,7 @@
 					}
 				},
 				"serve": {
-					"builder": "@angular-devkit/build-angular:dev-server",
+					"builder": "@angular-builders/custom-webpack:dev-server",
 					"options": {
 						"browserTarget": "stats4fun:build"
 					},
