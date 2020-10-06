@@ -57,15 +57,6 @@ import config from './app.config';
 		{
 			provide: OKTA_CONFIG, 
 			useValue: config.oidc,
-			// useFactory: () => {
-			// 	return {
-			// 		clientId: '0oa11j4br1pNtQx3c4x7',
-			// 		issuer: 'https://dev-245864.okta.com/oauth2/default',
-			// 		redirectUri: 'http://localhost:4200/auth/callback',
-			// 		scopes: ['openid', 'email', 'groups'],
-			// 		pkce: true
-			// 	};
-			// }
 		},
 	],
 	bootstrap: [AppComponent]

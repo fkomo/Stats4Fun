@@ -4,7 +4,6 @@ const {
 	OKTA_REDIRECT_URI, 
 	API_URL, 
 	DEBUG,
-
 } = process.env;
 
 export default {

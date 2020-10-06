@@ -10,8 +10,8 @@ export class LogService {
 	constructor() { }
 
 	add(msg: any) {
-		 if (!config.debug)
-		 	return;
+		if (config.debug != "true")
+			return;
 
 		console.log(new Date() + ": " + JSON.stringify(msg));
 	}
