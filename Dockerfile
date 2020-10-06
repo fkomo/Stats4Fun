@@ -6,6 +6,13 @@ COPY package*.json ./
 RUN npm install
 # bundle app source
 COPY . .
+
+# copy env configuration
+RUN rm -frv /usr/src/app/client/.env*
+COPY ./client/.env-dev.js ./client/.env.js
+#COPY ./client/.env-test.js ./client/.env.js
+#COPY ./client/.env-prod.js ./client/.env.js
+
 # build application
 RUN npm run build
 

@@ -46,6 +46,7 @@ testem.log
 Thumbs.db
 
 # ignore configuration
+.env
 .env-dev.js
 .env-test.js
 .env-prod.js
