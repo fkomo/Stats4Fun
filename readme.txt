@@ -1,3 +1,7 @@
+# Stats4Fun
+
+ui for Stats4Fun-Api
+
 # stop/remove old & create/run new docker image
 docker stop stats4fun
 docker rm stats4fun
